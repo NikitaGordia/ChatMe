@@ -16,7 +16,7 @@
             android:name=".helper.MainService"
             android:stopWithTask="false" />
 
-        <activity android:name=".module.signin.view.SignInActivity">
+        <activity android:name=".module.register.view.RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
