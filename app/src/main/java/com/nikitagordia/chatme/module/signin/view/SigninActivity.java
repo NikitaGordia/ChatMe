@@ -2,6 +2,7 @@ package com.nikitagordia.chatme.module.signin.view;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -17,6 +18,11 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -26,12 +32,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivitySigninBinding;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 import com.nikitagordia.chatme.utils.Const;
+
+import java.util.Arrays;
 
 public class SigninActivity extends AppCompatActivity {
 
@@ -42,6 +52,8 @@ public class SigninActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private GoogleApiClient client;
     private ProgressDialog dialog;
+    private LoginManager loginManager;
+    private CallbackManager callbackManager;
 
     private OnCompleteListener<AuthResult> signInCallback;
 
@@ -158,6 +170,33 @@ public class SigninActivity extends AppCompatActivity {
                 startActivityForResult(Auth.GoogleSignInApi.getSignInIntent(client), GOOGLE_REQUEST_CODE);
             }
         });
+
+        callbackManager = CallbackManager.Factory.create();
+        loginManager = LoginManager.getInstance();
+        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                auth.signInWithCredential(FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken()))
+                        .addOnCompleteListener(signInCallback);
+            }
+
+            @Override
+            public void onCancel() {
+                dialog.cancel();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(SigninActivity.this, getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            }
+        });
+        bind.facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginManager.logInWithReadPermissions(SigninActivity.this, Arrays.asList("email", "public_profile"));
+            }
+        });
     }
 
     @Override
@@ -169,6 +208,7 @@ public class SigninActivity extends AppCompatActivity {
             AuthCredential credential = GoogleAuthProvider.getCredential(Auth.GoogleSignInApi.getSignInResultFromIntent(data).getSignInAccount().getIdToken(), null);
             auth.signInWithCredential(credential).addOnCompleteListener(signInCallback);
         }
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void hideTapHere() {
