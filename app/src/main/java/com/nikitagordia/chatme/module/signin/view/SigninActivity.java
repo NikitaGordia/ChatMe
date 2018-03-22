@@ -2,20 +2,21 @@ package com.nikitagordia.chatme.module.signin.view;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.AtomicFile;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -24,24 +25,26 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivitySigninBinding;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 import com.nikitagordia.chatme.utils.Const;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 public class SigninActivity extends AppCompatActivity {
 
@@ -197,6 +200,49 @@ public class SigninActivity extends AppCompatActivity {
                 loginManager.logInWithReadPermissions(SigninActivity.this, Arrays.asList("email", "public_profile"));
             }
         });
+
+        bind.phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SigninActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.dialog_phone_holder, null);
+                final EditText phoneHolder = (EditText) view.findViewById(R.id.phone_holder);
+                final TextView done = (TextView) view.findViewById(R.id.done);
+                builder.setView(view);
+                final AlertDialog dialog = builder.create();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+                done.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        phoneSignin(phoneHolder.getText().toString());
+                        dialog.cancel();
+                    }
+                });
+            }
+        });
+
+        bind.login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SigninActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.dialog_email_password_holder, null);
+                final EditText emailHolder = (EditText) view.findViewById(R.id.email_holder);
+                final EditText passwordHolder = (EditText) view.findViewById(R.id.password_holder);
+                final TextView done = (TextView) view.findViewById(R.id.done);
+                builder.setView(view);
+                final AlertDialog dialog = builder.create();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+                done.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        emailPasswordSignin(emailHolder.getText().toString(), passwordHolder.getText().toString());
+                        dialog.cancel();
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -209,6 +255,27 @@ public class SigninActivity extends AppCompatActivity {
             auth.signInWithCredential(credential).addOnCompleteListener(signInCallback);
         }
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void phoneSignin(String number) {
+        dialog.show();
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, this,
+                new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    @Override
+                    public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                        auth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(signInCallback);
+                    }
+
+                    @Override
+                    public void onVerificationFailed(FirebaseException e) {
+                        Toast.makeText(SigninActivity.this, getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void emailPasswordSignin(String email, String password) {
+        dialog.show();
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(signInCallback);
     }
 
     private void hideTapHere() {

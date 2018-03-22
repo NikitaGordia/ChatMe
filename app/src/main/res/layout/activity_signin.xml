@@ -115,6 +115,8 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:background="@drawable/edit_text_background"
+                android:elevation="6dp"
+                android:inputType="textEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -125,6 +127,7 @@
                 android:inputType="textPassword"
                 android:layout_margin="15dp"
                 android:background="@drawable/edit_text_background"
+                android:elevation="6dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

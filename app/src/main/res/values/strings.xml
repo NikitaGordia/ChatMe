@@ -16,5 +16,6 @@
     <string name="error">Error(</string>
     <string name="empty_field">Empty field</string>
     <string name="loading">Loading, please wait...</string>
+    <string name="phone">Phone</string>
 
 </resources>
