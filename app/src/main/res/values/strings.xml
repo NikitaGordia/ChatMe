@@ -5,5 +5,16 @@
     <string name="facebook_app_id">1765601310169433</string>
     <string name="fb_login_protocol_scheme">fb1765601310169433</string>
 
+    <string name="sign_in">Sign in with</string>
+    <string name="create_account">Create an simple account</string>
+    <string name="email_and_password">Email and password</string>
+    <string name="tap_here">(Tap here)</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="done">DONE</string>
+    <string name="welcome">Welcome</string>
+    <string name="error">Error(</string>
+    <string name="empty_field">Empty field</string>
+    <string name="loading">Loading, please wait...</string>
 
 </resources>
