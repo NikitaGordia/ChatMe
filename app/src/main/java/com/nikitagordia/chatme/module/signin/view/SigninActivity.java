@@ -8,6 +8,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,7 +26,9 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.SignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,6 +41,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivitySigninBinding;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
@@ -54,14 +62,15 @@ public class SigninActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private GoogleApiClient client;
-    private ProgressDialog dialog;
     private LoginManager loginManager;
     private CallbackManager callbackManager;
 
     private OnCompleteListener<AuthResult> signInCallback;
 
+    private ProgressDialog dialog;
 
-    private boolean isAnimated;
+
+    private boolean isAnimated, connected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,17 +84,18 @@ public class SigninActivity extends AppCompatActivity {
 
         dialog = new ProgressDialog(this);
         dialog.setMessage(getResources().getString(R.string.loading));
+        dialog.setCancelable(false);
 
         signInCallback = new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 dialog.cancel();
                 if (task.isSuccessful()) {
-                    Toast.makeText(SigninActivity.this, getResources().getString(R.string.welcome), Toast.LENGTH_SHORT).show();
+                    showToast(R.string.welcome);
                     startActivity(new Intent(SigninActivity.this, ProfileActivity.class));
                     finish();
                 } else {
-                    Toast.makeText(SigninActivity.this, getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
+                    showToast(R.string.error);
                     bind.password.setText("");
                 }
             }
@@ -97,83 +107,49 @@ public class SigninActivity extends AppCompatActivity {
 
                 if (isAnimated) return;
                 isAnimated = true;
-
-                showLoginText();
-
-                showCreateText();
-
-                hideTapHere();
-
-                double r = 3d * Math.min(bind.area.getMeasuredWidth(), bind.area.getMeasuredHeight()) / 8d;
-                double centerX = bind.area.getMeasuredWidth() / 2d;
-                double centerY = bind.area.getMeasuredHeight() / 2d;
-
-                showAnimation(bind.phone,
-                        (float)(centerX + r * Math.cos(Const.PHONE_ANGLE) - bind.phone.getMeasuredWidth() / 2d),
-                        (float)(centerY - r * Math.sin(Const.PHONE_ANGLE) - bind.phone.getMeasuredHeight() / 2d),
-                        Const.PHONE_SHOW_DURAION);
-
-                showAnimation(bind.github,
-                        (float)(centerX + r * Math.cos(Const.GITHUB_ANGLE) - bind.github.getMeasuredWidth() / 2d),
-                        (float)(centerY - r * Math.sin(Const.GITHUB_ANGLE) - bind.github.getMeasuredHeight() / 2d),
-                        Const.GITHUB_SHOW_DURATION);
-
-                showAnimation(bind.twitter,
-                        (float)(centerX + r * Math.cos(Const.TWITTER_ANGLE) - bind.twitter.getMeasuredWidth() / 2d),
-                        (float)(centerY - r * Math.sin(Const.TWITTER_ANGLE) - bind.twitter.getMeasuredHeight() / 2d),
-                        Const.TWITTER_SHOW_DURATION);
-
-                showAnimation(bind.google,
-                        (float)(centerX + r * Math.cos(Const.GOOGLE_ANGLE) - bind.google.getMeasuredWidth() / 2d),
-                        (float)(centerY - r * Math.sin(Const.GOOGLE_ANGLE) - bind.google.getMeasuredHeight() / 2d),
-                        Const.GOOGLE_SHOW_DURAION);
-
-                showAnimation(bind.facebook,
-                        (float)(centerX + r * Math.cos(Const.FACEBOOK_ANGLE) - bind.facebook.getMeasuredWidth() / 2d),
-                        (float)(centerY - r * Math.sin(Const.FACEBOOK_ANGLE) - bind.facebook.getMeasuredHeight() / 2d),
-                        Const.FACEBOOK_SHOW_DURATION);
-
-                showAnimation(bind.login,
-                        bind.area.getMeasuredWidth() / 2 - bind.login.getMeasuredWidth() / 2,
-                        3 * bind.area.getMeasuredHeight() / 4 - bind.login.getMeasuredHeight() / 2,
-                        Const.LOGIN_SHOW_DURATION);
+                showAnimation();
             }
         });
 
-        bind.done.setOnClickListener(new View.OnClickListener() {
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                if (bind.email.getText().toString().isEmpty() || bind.password.getText().toString().isEmpty()) {
-                    Toast.makeText(SigninActivity.this, getResources().getString(R.string.empty_field), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                auth.createUserWithEmailAndPassword(bind.email.getText().toString(), bind.password.getText().toString()).addOnCompleteListener(signInCallback);
-                dialog.show();
+            public void onDataChange(DataSnapshot snapshot) {
+                connected = snapshot.getValue(Boolean.class);
             }
-        });
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        client = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        dialog.cancel();
-                        Toast.makeText(SigninActivity.this, getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        bind.google.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivityForResult(Auth.GoogleSignInApi.getSignInIntent(client), GOOGLE_REQUEST_CODE);
+            public void onCancelled(DatabaseError error) {
             }
         });
 
+        googleSetup();
+        emailPasswordSetup();
+        facebookSetup();
+        phoneSetup();
+        loginSetup();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (checkConnection()) return;
+
+        dialog.show();
+        if (requestCode == GOOGLE_REQUEST_CODE) {
+            GoogleSignInAccount account = Auth.GoogleSignInApi.getSignInResultFromIntent(data).getSignInAccount();
+            if (account == null) {
+                showToast(R.string.error);
+                dialog.cancel();
+                return;
+            }
+            AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+            auth.signInWithCredential(credential).addOnCompleteListener(signInCallback);
+        }
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void facebookSetup() {
         callbackManager = CallbackManager.Factory.create();
         loginManager = LoginManager.getInstance();
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -190,20 +166,65 @@ public class SigninActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(SigninActivity.this, getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
+                showToast(R.string.error);
                 dialog.cancel();
             }
         });
         bind.facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkConnection()) return;
                 loginManager.logInWithReadPermissions(SigninActivity.this, Arrays.asList("email", "public_profile"));
             }
         });
+    }
 
+    private void emailPasswordSetup() {
+        bind.done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bind.email.getText().toString().isEmpty() || bind.password.getText().toString().isEmpty()) {
+                    showToast(R.string.empty_field);
+                    return;
+                }
+                if (checkConnection()) return;
+                dialog.show();
+                auth.createUserWithEmailAndPassword(bind.email.getText().toString(), bind.password.getText().toString()).addOnCompleteListener(signInCallback);
+            }
+        });
+    }
+
+    private void loginSetup() {
+        bind.login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkConnection()) return;
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(SigninActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.dialog_email_password_holder, null);
+                final EditText emailHolder = (EditText) view.findViewById(R.id.email_holder);
+                final EditText passwordHolder = (EditText) view.findViewById(R.id.password_holder);
+                final TextView done = (TextView) view.findViewById(R.id.done);
+                builder.setView(view);
+                final AlertDialog d = builder.create();
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                d.show();
+                done.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.show();
+                        emailPasswordSignin(emailHolder.getText().toString(), passwordHolder.getText().toString());
+                    }
+                });
+            }
+        });
+    }
+
+    private void phoneSetup() {
         bind.phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkConnection()) return;
                 AlertDialog.Builder builder = new AlertDialog.Builder(SigninActivity.this);
                 View view = getLayoutInflater().inflate(R.layout.dialog_phone_holder, null);
                 final EditText phoneHolder = (EditText) view.findViewById(R.id.phone_holder);
@@ -215,49 +236,44 @@ public class SigninActivity extends AppCompatActivity {
                 done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (checkConnection()) {
+                            dialog.cancel();
+                            return;
+                        }
                         phoneSignin(phoneHolder.getText().toString());
-                        dialog.cancel();
-                    }
-                });
-            }
-        });
-
-        bind.login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SigninActivity.this);
-                View view = getLayoutInflater().inflate(R.layout.dialog_email_password_holder, null);
-                final EditText emailHolder = (EditText) view.findViewById(R.id.email_holder);
-                final EditText passwordHolder = (EditText) view.findViewById(R.id.password_holder);
-                final TextView done = (TextView) view.findViewById(R.id.done);
-                builder.setView(view);
-                final AlertDialog dialog = builder.create();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-                done.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        emailPasswordSignin(emailHolder.getText().toString(), passwordHolder.getText().toString());
-                        dialog.cancel();
                     }
                 });
             }
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void googleSetup() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        client = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        dialog.cancel();
+                        showToast(R.string.error);
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
-        dialog.show();
-        if (requestCode == GOOGLE_REQUEST_CODE) {
-            AuthCredential credential = GoogleAuthProvider.getCredential(Auth.GoogleSignInApi.getSignInResultFromIntent(data).getSignInAccount().getIdToken(), null);
-            auth.signInWithCredential(credential).addOnCompleteListener(signInCallback);
-        }
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+        bind.google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkConnection()) return;
+                startActivityForResult(Auth.GoogleSignInApi.getSignInIntent(client), GOOGLE_REQUEST_CODE);
+            }
+        });
     }
 
     private void phoneSignin(String number) {
+        if (checkConnection()) return;
         dialog.show();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, this,
                 new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -268,14 +284,60 @@ public class SigninActivity extends AppCompatActivity {
 
                     @Override
                     public void onVerificationFailed(FirebaseException e) {
-                        Toast.makeText(SigninActivity.this, getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
+                        showToast(R.string.error);
                     }
                 });
     }
 
     private void emailPasswordSignin(String email, String password) {
-        dialog.show();
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(signInCallback);
+    }
+
+    public void showToast(@StringRes int res) {
+        Toast.makeText(this, getResources().getString(res), Toast.LENGTH_SHORT).show();
+    }
+
+    private void showAnimation() {
+
+        showLoginText();
+
+        showCreateText();
+
+        hideTapHere();
+
+        double r = 3d * Math.min(bind.area.getMeasuredWidth(), bind.area.getMeasuredHeight()) / 8d;
+        double centerX = bind.area.getMeasuredWidth() / 2d;
+        double centerY = bind.area.getMeasuredHeight() / 2d;
+
+        showAnimation(bind.phone,
+                (float)(centerX + r * Math.cos(Const.PHONE_ANGLE) - bind.phone.getMeasuredWidth() / 2d),
+                (float)(centerY - r * Math.sin(Const.PHONE_ANGLE) - bind.phone.getMeasuredHeight() / 2d),
+                Const.PHONE_SHOW_DURAION);
+
+        showAnimation(bind.github,
+                (float)(centerX + r * Math.cos(Const.GITHUB_ANGLE) - bind.github.getMeasuredWidth() / 2d),
+                (float)(centerY - r * Math.sin(Const.GITHUB_ANGLE) - bind.github.getMeasuredHeight() / 2d),
+                Const.GITHUB_SHOW_DURATION);
+
+        showAnimation(bind.twitter,
+                (float)(centerX + r * Math.cos(Const.TWITTER_ANGLE) - bind.twitter.getMeasuredWidth() / 2d),
+                (float)(centerY - r * Math.sin(Const.TWITTER_ANGLE) - bind.twitter.getMeasuredHeight() / 2d),
+                Const.TWITTER_SHOW_DURATION);
+
+        showAnimation(bind.google,
+                (float)(centerX + r * Math.cos(Const.GOOGLE_ANGLE) - bind.google.getMeasuredWidth() / 2d),
+                (float)(centerY - r * Math.sin(Const.GOOGLE_ANGLE) - bind.google.getMeasuredHeight() / 2d),
+                Const.GOOGLE_SHOW_DURAION);
+
+        showAnimation(bind.facebook,
+                (float)(centerX + r * Math.cos(Const.FACEBOOK_ANGLE) - bind.facebook.getMeasuredWidth() / 2d),
+                (float)(centerY - r * Math.sin(Const.FACEBOOK_ANGLE) - bind.facebook.getMeasuredHeight() / 2d),
+                Const.FACEBOOK_SHOW_DURATION);
+
+        showAnimation(bind.login,
+                bind.area.getMeasuredWidth() / 2 - bind.login.getMeasuredWidth() / 2,
+                3 * bind.area.getMeasuredHeight() / 4 - bind.login.getMeasuredHeight() / 2,
+                Const.LOGIN_SHOW_DURATION);
     }
 
     private void hideTapHere() {
@@ -328,5 +390,13 @@ public class SigninActivity extends AppCompatActivity {
                 .with(animatorScaleY);
 
         set.start();
+    }
+
+    private boolean checkConnection() {
+        if (!connected) {
+            dialog.cancel();
+            showToast(R.string.error);
+        }
+        return !connected;
     }
 }
