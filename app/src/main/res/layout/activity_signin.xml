@@ -41,34 +41,68 @@
 
             </LinearLayout>
 
-
-            <Button
+            <LinearLayout
                 android:id="@+id/google"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:orientation="vertical"
+                android:gravity="center"
                 android:visibility="invisible"
-                android:background="@drawable/logo_google"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/facebook"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:visibility="invisible"
-                android:background="@drawable/logo_facebook" />
+                <Button
+                    android:id="@+id/google_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/logo_google"/>
 
-            <Button
-                android:id="@+id/github"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:visibility="invisible"
-                android:background="@drawable/logo_github"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/google" />
 
-            <Button
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:id="@+id/twitter"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:gravity="center"
                 android:visibility="invisible"
-                android:background="@drawable/logo_twitter" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/twitter_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/logo_twitter" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/twitter" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/facebook"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/facebook_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/logo_facebook" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/facebook" />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/login"
@@ -77,12 +111,27 @@
                 android:visibility="invisible"
                 android:background="@drawable/logo_login" />
 
-            <Button
+            <LinearLayout
+                android:orientation="vertical"
                 android:id="@+id/phone"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:gravity="center"
                 android:visibility="invisible"
-                android:background="@drawable/logo_phone" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/phone_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:background="@drawable/logo_phone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone_sms" />
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/login_tv"
