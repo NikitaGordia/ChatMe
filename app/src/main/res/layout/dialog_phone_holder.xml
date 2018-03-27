@@ -15,6 +15,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
         android:elevation="6dp"
+        android:textAlignment="center"
         android:background="@drawable/edit_text_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

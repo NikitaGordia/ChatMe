@@ -7,6 +7,7 @@
     <string name="com.twitter.sdk.android.CONSUMER_KEY">nk02m5V1uLaVA9bNflWeDZpNj</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">3mePLHbik7HYI8Xyi2olITJObthZmyrza0ppS9pSJ3gkkh4Grc</string>
 
+    <!--SigninActivity-->
     <string name="sign_in">Sign in with</string>
     <string name="create_account">Create an simple account</string>
     <string name="email_and_password">Email and password</string>
@@ -19,10 +20,13 @@
     <string name="empty_field">Empty field</string>
     <string name="loading">Loading, please wait...</string>
     <string name="phone">Phone</string>
-
     <string name="twitter">Twitter</string>
     <string name="facebook">Facebook</string>
     <string name="google">Google</string>
     <string name="phone_sms">Phone SMS</string>
+
+    <!--ProfileSetupActivity-->
+    <string name="nickname">Nickname</string>
+    <string name="photo_tv">Tap to choose profile photo</string>
 
 </resources>

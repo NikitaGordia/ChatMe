@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -38,6 +40,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -47,10 +50,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivitySigninBinding;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
+import com.nikitagordia.chatme.module.profilesetup.view.ProfileSetupActivity;
 import com.nikitagordia.chatme.utils.Const;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -72,6 +78,7 @@ public class SigninActivity extends AppCompatActivity {
     private ActivitySigninBinding bind;
 
     private FirebaseAuth auth;
+    private FirebaseDatabase database;
     private GoogleApiClient client;
     private LoginManager loginManager;
     private CallbackManager callbackManager;
@@ -81,6 +88,8 @@ public class SigninActivity extends AppCompatActivity {
 
     private ProgressDialog dialog;
 
+    private View lastOpen;
+    private int lastOpenId;
 
     private boolean isAnimated;
 
@@ -91,6 +100,7 @@ public class SigninActivity extends AppCompatActivity {
         bind = DataBindingUtil.setContentView(this, R.layout.activity_signin);
 
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         isAnimated = false;
 
@@ -101,12 +111,35 @@ public class SigninActivity extends AppCompatActivity {
         signInCallback = new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                dialog.cancel();
-                if (task.isSuccessful()) {
-                    showToast(R.string.welcome);
-                    startActivity(new Intent(SigninActivity.this, ProfileActivity.class));
-                    finish();
+                final FirebaseUser user = auth.getCurrentUser();
+                if (task.isSuccessful() && user != null) {
+                    database.getReference().child("user").child(user.getUid()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            dialog.cancel();
+
+                            if (dataSnapshot.getValue() == null) {
+                                if (lastOpen == null) {
+                                    startActivity(new Intent(SigninActivity.this, ProfileSetupActivity.class));
+                                    return;
+                                }
+                                Intent i = new Intent(SigninActivity.this, ProfileSetupActivity.class);
+                                i.putExtra(ProfileSetupActivity.EXTRA_SETUP_METHOD, lastOpenId);
+                                startActivity(i, ActivityOptionsCompat.makeSceneTransitionAnimation(SigninActivity.this, lastOpen, "provider").toBundle());
+                            } else {
+                                startActivity(new Intent(SigninActivity.this, ProfileActivity.class));
+                            }
+                            finish();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            dialog.cancel();
+                        }
+                    });
+
                 } else {
+                    dialog.cancel();
                     showToast(R.string.error);
                     bind.password.setText("");
                 }
@@ -160,6 +193,9 @@ public class SigninActivity extends AppCompatActivity {
         bind.twitterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_TWITTER;
+                lastOpen = bind.twitter;
                 twitterClient.authorize(SigninActivity.this, new Callback<TwitterSession>() {
                     @Override
                     public void success(Result<TwitterSession> result) {
@@ -201,6 +237,8 @@ public class SigninActivity extends AppCompatActivity {
         bind.facebookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_FACEBOOK;
+                lastOpen = bind.facebook;
                 loginManager.logInWithReadPermissions(SigninActivity.this, Arrays.asList("email", "public_profile"));
             }
         });
@@ -224,6 +262,8 @@ public class SigninActivity extends AppCompatActivity {
         bind.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_EMAIL_AND_PASSWORD;
+                lastOpen = bind.login;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(SigninActivity.this);
                 View view = getLayoutInflater().inflate(R.layout.dialog_email_password_holder, null);
@@ -238,6 +278,7 @@ public class SigninActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         dialog.show();
+                        d.cancel();
                         emailPasswordSignin(emailHolder.getText().toString(), passwordHolder.getText().toString());
                     }
                 });
@@ -249,17 +290,21 @@ public class SigninActivity extends AppCompatActivity {
         bind.phoneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_PHONE;
+                lastOpen = bind.phone;
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(SigninActivity.this);
                 View view = getLayoutInflater().inflate(R.layout.dialog_phone_holder, null);
                 final EditText phoneHolder = (EditText) view.findViewById(R.id.phone_holder);
                 final TextView done = (TextView) view.findViewById(R.id.done);
                 builder.setView(view);
-                final AlertDialog dialog = builder.create();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
+                final AlertDialog d = builder.create();
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                d.show();
                 done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        d.cancel();
                         phoneSignin(phoneHolder.getText().toString());
                     }
                 });
@@ -286,7 +331,9 @@ public class SigninActivity extends AppCompatActivity {
         bind.googleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("mytg", "HERE");
+                lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_GOOGLE;
+                lastOpen = bind.google;
+                dialog.show();
                 startActivityForResult(Auth.GoogleSignInApi.getSignInIntent(client), GOOGLE_REQUEST_CODE);
             }
         });
@@ -393,7 +440,7 @@ public class SigninActivity extends AppCompatActivity {
 
         AnimatorSet set = new AnimatorSet();
 
-        ObjectAnimator animatorHeight = ObjectAnimator.ofFloat(v, "y", fromY, y).setDuration(duration);
+        ObjectAnimator animatorHeight = ObjectAnimator.ofFloat(v, "translationY", fromY, y).setDuration(duration);
         animatorHeight.setInterpolator(new DecelerateInterpolator());
 
         ObjectAnimator animatorScaleX = ObjectAnimator.ofFloat(v, "scaleX", 0.8f, 1f).setDuration(duration);
