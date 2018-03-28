@@ -5,6 +5,11 @@
     <color name="colorAccent">#f3bf6b</color>
 
 
+    <color name="like">#e5fd807b</color>
+    <color name="comment">#c293bc41</color>
+    <color name="view">#e09dcae7</color>
+
+
     <color name="colorPrimaryDark2">#7b8a99</color>
     <color name="white">#FFEAEFF3</color>
     <color name="colorPrimaryDarkBlue">#142536</color>

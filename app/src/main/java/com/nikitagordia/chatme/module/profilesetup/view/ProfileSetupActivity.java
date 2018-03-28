@@ -2,10 +2,9 @@ package com.nikitagordia.chatme.module.profilesetup.view;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.provider.ContactsContract;
+import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,7 +13,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityProfileSetupBinding;
-import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 
 public class ProfileSetupActivity extends AppCompatActivity {
 
@@ -64,7 +62,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
                     return;
                 }
                 database.getReference().child("user").child(user.getUid()).child("name").setValue(nickname);
-                startActivity(new Intent(ProfileSetupActivity.this, ProfileActivity.class));
+                //TODO Start main screen
                 finish();
             }
         });
