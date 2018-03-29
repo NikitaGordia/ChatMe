@@ -33,7 +33,10 @@ dependencies {
     implementation 'com.facebook.android:facebook-login:[4,5)'
     implementation 'com.google.android.gms:play-services-auth:12.0.0'
     implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 }
+
+
 
 
 

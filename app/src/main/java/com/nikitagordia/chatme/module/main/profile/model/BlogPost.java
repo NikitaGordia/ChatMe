@@ -1,5 +1,8 @@
 package com.nikitagordia.chatme.module.main.profile.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by nikitagordia on 3/28/18.
  */
@@ -22,10 +25,13 @@ public class BlogPost {
 
     public BlogPost() {}
 
-    public BlogPost(String nickname, String date, String content) {
-        this.owner_name = nickname;
-        this.date = date;
+    public BlogPost(String content, String id, String owner_id, String owner_name) {
+        view = comment = like = 0;
         this.content = content;
+        this.id = id;
+        this.owner_id = owner_id;
+        this.owner_name = owner_name;
+        date = new SimpleDateFormat("EEE, d MMM yyyy").format(new Date()).toString();
     }
 
     public String getId() {

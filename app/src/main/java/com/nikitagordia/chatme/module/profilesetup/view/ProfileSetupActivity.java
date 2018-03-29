@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityProfileSetupBinding;
+import com.nikitagordia.chatme.module.main.MainActivity;
 
 public class ProfileSetupActivity extends AppCompatActivity {
 
@@ -62,7 +63,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
                     return;
                 }
                 database.getReference().child("user").child(user.getUid()).child("name").setValue(nickname);
-                //TODO Start main screen
+                startActivity(new Intent(ProfileSetupActivity.this, MainActivity.class));
                 finish();
             }
         });

@@ -17,7 +17,10 @@
 
             <ImageView
                 android:src="@drawable/user_photo_holder"
-                android:layout_margin="20dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
 
@@ -28,9 +31,10 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/user_name"
+                    tools:text="Nikita Gordia"
                     android:layout_marginBottom="10dp"
                     android:textSize="16sp"
-                    android:text="Nikita Gordia"
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     android:fontFamily="sans-serif-condensed"
@@ -39,14 +43,15 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    tools:text="nikita.gordia@gmail.com"
+                    android:id="@+id/user_email"
                     android:textSize="12sp"
-                    android:text="nikita.gordia@gmail.com"
                     android:textStyle="bold"
                     android:textColor="@android:color/darker_gray"
                     android:background="@drawable/edit_text_background_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-
+ 
             </LinearLayout>
 
         </LinearLayout>
@@ -62,6 +67,7 @@
                 android:layout_height="match_parent"/>
 
             <android.support.design.widget.FloatingActionButton
+                android:id="@+id/add_post"
                 android:layout_margin="5dp"
                 android:src="@drawable/icon_add"
                 android:layout_gravity="bottom|right"

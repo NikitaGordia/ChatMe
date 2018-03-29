@@ -18,14 +18,16 @@
 
         <activity
             android:name=".module.signin.view.SigninActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".module.profilesetup.view.ProfileSetupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.main.MainActivity"
             android:screenOrientation="portrait">
         </activity>
 
-        <activity
-            android:name=".module.profilesetup.view.ProfileSetupActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".module.main.MainActivity"
+        <activity android:name=".module.splash.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

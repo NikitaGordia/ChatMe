@@ -27,12 +27,8 @@ public class MainActivity extends AppCompatActivity {
         bind = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         adapter = new FragmentPagerViewAdapter(getSupportFragmentManager(), new Fragment[]{
-                new ProfileFragment(),
-                new ProfileFragment(),
                 new ProfileFragment()
         }, new String[] {
-                getResources().getString(R.string.home),
-                getResources().getString(R.string.home),
                 getResources().getString(R.string.home)
         });
 

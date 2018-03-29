@@ -1,21 +1,38 @@
 package com.nikitagordia.chatme.module.main.profile.view;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.FragmentProfileBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
+import com.nikitagordia.chatme.module.signin.view.SigninActivity;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by nikitagordia on 3/28/18.
@@ -23,26 +40,110 @@ import java.util.Arrays;
 
 public class ProfileFragment extends Fragment {
 
-    FragmentProfileBinding bind;
+    private FirebaseAuth auth;
+    private FirebaseDatabase db;
+
+    private FragmentProfileBinding bind;
 
     private ListAdapter adapter;
+
+    private String userName, userId;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         bind = FragmentProfileBinding.inflate(inflater, container, false);
 
-        adapter = new ListAdapter(getContext());
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
+        userId = auth.getCurrentUser().getUid();
+
+        adapter = new ListAdapter(getContext(), bind.postList);
         bind.postList.setLayoutManager(new LinearLayoutManager(getContext()));
         bind.postList.setAdapter(adapter);
 
-        adapter.updatePosts(Arrays.asList(
-                new BlogPost("Nikita Gordia", "28 March, 2018", "RecyclerView exposes the common ViewHolder pattern as a first class citizen in its API. In onCreateViewHolder(), the Views are created and the ViewHolder contains references to them so that the data can be set quickly. Then in onBindView(), the specific data is assigned to the Views."),
-                new BlogPost("George Mount", "14 March, 2018", "From a UX standpoint, this means that when you run the app, play some media, and hit the home button, the player resources are released. When you switch back to that app, the player is initialized again, and the previous state information should be restored, so that the user can resume playback where they left off (position of previous playback if any, and the item in the playlist that they were consuming, which is a window index)."),
-                new BlogPost("Nazmul Idris", "12 March, 2018", "Before the player’s resources are released, the player’s currentWindowIndex, currentPosition, playWhenReady, and playlist or media item information are saved to the PlayerState object. The state is then restored once the player is reinitialized. Here are methods from PlayerHolder class that demonstrate how this can be done."),
-                new BlogPost("Leon Nicholls", "7 March, 2018", "Want More? Head over to the Actions on Google community to discuss Actions with other developers. Join the Actions on Google developer community program and you could earn a $200 monthly Google Cloud credit and an Assistant t-shirt when you publish your first app.")
-        ));
+        bind.addPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfileFragment.this.getContext());
+                View view = getLayoutInflater().inflate(R.layout.dialog_add_post, null);
+                final EditText content = (EditText) view.findViewById(R.id.content);
+                final TextView post = (TextView) view.findViewById(R.id.post);
+                builder.setView(view);
+                final AlertDialog d = builder.create();
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                d.show();
+                post.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        d.cancel();
+                        createPost(content.getText().toString());
+                    }
+                });
+            }
+        });
+
+        db.getReference().child("user").child(userId).child("post_id").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                db.getReference().child("post").child((String)dataSnapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        adapter.addPost(dataSnapshot.getValue(BlogPost.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        db.getReference().child("user").child(userId).child("name").runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                userName = (String) dataSnapshot.getValue();
+                if (bind != null && bind.userName != null) bind.userName.setText(userName);
+            }
+        });
+
+        String userEmail = "";
+        if (auth.getCurrentUser().getEmail() != null) userEmail = auth.getCurrentUser().getEmail(); else userEmail = auth.getCurrentUser().getPhoneNumber();
+        bind.userEmail.setText(userEmail);
 
         return bind.getRoot();
+    }
+
+    void createPost(String content) {
+        String key = db.getReference().child("post").push().getKey();
+        BlogPost post = new BlogPost(content, key, userId, userName);
+        db.getReference().child("post").child(key).setValue(post);
+        db.getReference().child("user").child(userId).child("post_id").push().setValue(key);
     }
 }

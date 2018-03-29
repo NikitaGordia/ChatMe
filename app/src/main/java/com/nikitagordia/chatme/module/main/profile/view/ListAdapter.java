@@ -23,10 +23,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
 
     private List<BlogPost> list;
     private Context context;
+    private RecyclerView view;
 
-    public ListAdapter(Context context) {
+    public ListAdapter(Context context, RecyclerView view) {
         list = new ArrayList<>();
         this.context = context;
+        this.view = view;
     }
 
     @Override
@@ -39,10 +41,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
         holder.bindData(list.get(position));
     }
 
-    public void updatePosts(List<BlogPost> posts) {
-        list.clear();
-        list.addAll(posts);
-        notifyDataSetChanged();
+    public void addPost(BlogPost post) {
+        view.scrollToPosition(0);
+        list.add(0, post);
+        notifyItemInserted(0);
     }
 
     @Override

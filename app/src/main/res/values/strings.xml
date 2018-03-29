@@ -36,4 +36,7 @@
     <string name="like">%1$ Like</string>
     <string name="comment">%1$ Comment</string>
     <string name="view">%1$ View</string>
+
+    <!--AddPostDialog-->
+    <string name="post">Post</string>
 </resources>
