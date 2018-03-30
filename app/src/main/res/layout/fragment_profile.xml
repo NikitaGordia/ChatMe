@@ -61,8 +61,8 @@
                 android:layout_margin="10dp"
                 android:src="@drawable/icon_logout"
                 android:layout_weight="0"
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_width="20dp"
+                android:layout_height="25dp" />
 
         </LinearLayout>
 

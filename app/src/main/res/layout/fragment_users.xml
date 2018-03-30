@@ -12,8 +12,9 @@
             android:id="@+id/nickname"
             android:layout_margin="10dp"
             android:hint="@string/nickname"
+            android:textColor="@android:color/white"
             android:textAlignment="center"
-            android:textColorHint="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
             android:background="@drawable/edit_text_background_black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

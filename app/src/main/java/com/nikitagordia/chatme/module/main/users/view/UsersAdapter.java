@@ -45,13 +45,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder>{
     }
 
     public void setQuery(String query) {
-        this.query = query;
+        this.query = query.toLowerCase();
         refreshFilter();
     }
 
     private boolean valid(String name) {
         if (query.isEmpty()) return true;
-        return name.contains(query);
+        return name.toLowerCase().contains(query);
     }
 
     @Override
