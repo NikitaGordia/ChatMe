@@ -48,6 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivitySigninBinding;
+import com.nikitagordia.chatme.module.main.MainActivity;
 import com.nikitagordia.chatme.module.profilesetup.view.ProfileSetupActivity;
 import com.nikitagordia.chatme.utils.Const;
 import com.twitter.sdk.android.core.Callback;
@@ -119,7 +120,7 @@ public class SigninActivity extends AppCompatActivity {
                                 i.putExtra(ProfileSetupActivity.EXTRA_SETUP_METHOD, lastOpenId);
                                 startActivity(i, ActivityOptionsCompat.makeSceneTransitionAnimation(SigninActivity.this, lastOpen, "provider").toBundle());
                             } else {
-                                //TODO Start main screen
+                                startActivity(new Intent(SigninActivity.this, MainActivity.class));
                             }
                             finish();
                         }

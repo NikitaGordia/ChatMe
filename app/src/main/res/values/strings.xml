@@ -33,10 +33,14 @@
     <string name="home">Home</string>
     <string name="post_example">And another one bites the dust Oh why can I not conquer love? And I might have thought that we were one Wanted to fight this war without weapon\nWell, I\'ve got thick skin and an elastic heart, But your blade - it mightbe too sharp I'm like a rubber band until you pull too hard, Yeah, I may snap and I move fast But you won't see me fall apart 'Cause I've got an elastic heart</string>
 
-    <string name="like">%1$ Like</string>
-    <string name="comment">%1$ Comment</string>
-    <string name="view">%1$ View</string>
+    <string name="like_cnt">%1$d Like</string>
+    <string name="view_cnt">%1$d View</string>
+    <string name="comment_cnt">%1$d Comment</string>
 
     <!--AddPostDialog-->
     <string name="post">Post</string>
+
+    <!--PostDetail-->
+    <string name="show_likes">Show likes</string>
+    <string name="show_comments">Show comments</string>
 </resources>

@@ -10,8 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.LayoutBlogPostBinding;
-import com.nikitagordia.chatme.module.commentdetail.view.PostDetail;
+import com.nikitagordia.chatme.module.postdetail.view.PostDetail;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.utils.UtilsManager;
 
@@ -60,6 +61,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
     public class PostHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private LayoutBlogPostBinding bind;
+        private BlogPost post;
 
         public PostHolder(LayoutBlogPostBinding bind) {
             super(bind.getRoot());
@@ -70,7 +72,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
 
         @Override
         public void onClick(View v) {
-            activity.startActivity(new Intent(context, PostDetail.class), ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+            activity.startActivity(PostDetail.getIntent(context, post), ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
                     new Pair<View, String>(bind.nickname, "nickname"),
                     new Pair<View, String>(bind.photo, "photo"),
                     new Pair<View, String>(bind.date, "date"),
@@ -82,9 +84,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
         }
 
         public void bindData(BlogPost post) {
+            this.post = post;
             bind.nickname.setText(post.getOwner_name());
             bind.content.setText(UtilsManager.cut(post.getContent(), 500));
             bind.date.setText(post.getDate());
+            bind.like.setText(context.getResources().getString(R.string.like_cnt, post.getLike()));
+            bind.comment.setText(context.getResources().getString(R.string.comment_cnt, post.getComment()));
+            bind.view.setText(context.getResources().getString(R.string.view_cnt, post.getView()));
         }
 
     }

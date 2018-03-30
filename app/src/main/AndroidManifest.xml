@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".module.commentdetail.view.PostDetail" ></activity>
+        <activity android:name=".module.postdetail.view.PostDetail" ></activity>
 
         <!-- Facebook API -->
         <meta-data
