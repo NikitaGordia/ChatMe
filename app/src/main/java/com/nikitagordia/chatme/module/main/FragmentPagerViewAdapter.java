@@ -1,4 +1,4 @@
-package com.nikitagordia.chatme.module.main.profile.view;
+package com.nikitagordia.chatme.module.main;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;

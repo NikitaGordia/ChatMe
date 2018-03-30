@@ -63,6 +63,9 @@ public class ProfileSetupActivity extends AppCompatActivity {
                     return;
                 }
                 database.getReference().child("user").child(user.getUid()).child("name").setValue(nickname);
+                String email = auth.getCurrentUser().getEmail();
+                if (email == null) email = auth.getCurrentUser().getPhoneNumber();
+                database.getReference().child("user").child(user.getUid()).child("email").setValue(email);
                 startActivity(new Intent(ProfileSetupActivity.this, MainActivity.class));
                 finish();
             }

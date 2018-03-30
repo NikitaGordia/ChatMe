@@ -1,5 +1,7 @@
 package com.nikitagordia.chatme.module.main.profile.view;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -16,7 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.SignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -45,6 +49,8 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding bind;
 
+    private ProgressDialog dialog;
+
     private ListAdapter adapter;
 
     private String userName, userId;
@@ -58,7 +64,7 @@ public class ProfileFragment extends Fragment {
         db = FirebaseDatabase.getInstance();
         userId = auth.getCurrentUser().getUid();
 
-        adapter = new ListAdapter(getContext(), bind.postList);
+        adapter = new ListAdapter(getContext(), getActivity(), bind.postList);
         bind.postList.setLayoutManager(new LinearLayoutManager(getContext()));
         bind.postList.setAdapter(adapter);
 
@@ -120,6 +126,12 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
+        dialog = new ProgressDialog(getContext());
+        dialog.setMessage(getResources().getString(R.string.loading));
+        dialog.setCancelable(false);
+        dialog.show();
+
         db.getReference().child("user").child(userId).child("name").runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -128,6 +140,11 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                dialog.cancel();
+                if (dataSnapshot == null) {
+                    Toast.makeText(getContext(), getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 userName = (String) dataSnapshot.getValue();
                 if (bind != null && bind.userName != null) bind.userName.setText(userName);
             }
@@ -136,6 +153,15 @@ public class ProfileFragment extends Fragment {
         String userEmail = "";
         if (auth.getCurrentUser().getEmail() != null) userEmail = auth.getCurrentUser().getEmail(); else userEmail = auth.getCurrentUser().getPhoneNumber();
         bind.userEmail.setText(userEmail);
+
+        bind.logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                startActivity(new Intent(getContext(), SigninActivity.class));
+                getActivity().finish();
+            }
+        });
 
         return bind.getRoot();
     }

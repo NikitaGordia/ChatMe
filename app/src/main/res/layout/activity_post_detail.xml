@@ -3,19 +3,20 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/post_body"
         android:orientation="vertical"
         android:background="@drawable/card_full_black"
         android:layout_width="match_parent"
+        android:transitionName="post_body"
         android:paddingRight="13dp"
         android:paddingLeft="13dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_height="wrap_content">
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:layout_weight="0"
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_width="match_parent"
@@ -25,6 +26,7 @@
             <TextView
                 android:id="@+id/nickname"
                 android:text="Nikita Gordia"
+                android:transitionName="nickname"
                 android:fontFamily="sans-serif-condensed"
                 android:textColor="@color/colorAccent"
                 android:layout_width="wrap_content"
@@ -33,6 +35,7 @@
             <ImageView
                 android:id="@+id/photo"
                 android:src="@drawable/user_photo_holder"
+                android:transitionName="photo"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_width="50dp"
@@ -41,6 +44,7 @@
             <TextView
                 android:id="@+id/date"
                 android:text="12 November, 2018"
+                android:transitionName="date"
                 android:fontFamily="sans-serif-condensed"
                 android:textColor="@android:color/background_light"
                 android:layout_width="wrap_content"
@@ -51,20 +55,23 @@
 
         <TextView
             android:id="@+id/content"
+            android:layout_weight="1"
             android:textColor="@color/white"
             android:text="@string/post_example"
-            android:maxLines="10"
+            android:transitionName="content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
         <LinearLayout
+            android:layout_weight="0"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-`            <TextView
+            <TextView
                 android:id="@+id/like"
                 android:text="17 Like"
+                android:transitionName="like"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_marginRight="3dp"
@@ -76,6 +83,7 @@
             <TextView
                 android:id="@+id/view"
                 android:text="34 View"
+                android:transitionName="view"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_marginRight="3dp"
@@ -87,6 +95,7 @@
             <TextView
                 android:id="@+id/comment"
                 android:text="3 Comment"
+                android:transitionName="comment"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:layout_marginRight="3dp"

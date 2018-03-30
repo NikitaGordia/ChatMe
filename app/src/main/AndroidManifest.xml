@@ -18,16 +18,15 @@
 
         <activity
             android:name=".module.signin.view.SigninActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".module.profilesetup.view.ProfileSetupActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".module.main.MainActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity android:name=".module.splash.SplashActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".module.splash.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +34,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".module.commentdetail.view.PostDetail" ></activity>
 
         <!-- Facebook API -->
         <meta-data
