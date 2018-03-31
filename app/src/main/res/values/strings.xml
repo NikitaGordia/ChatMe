@@ -43,6 +43,8 @@
     <!--PostDetail-->
     <string name="show_likes">Show likes</string>
     <string name="show_comments">Show comments</string>
+    <string name="sent">Sent</string>
+    <string name="type_your_comment">Type comment here ...</string>
 
     <!--Profile-->
     <string name="follow">Follow</string>
@@ -50,6 +52,7 @@
     <string name="friend">Friend</string>
     <string name="new_friend">New Friend</string>
     <string name="remove_frient">Removed from friends</string>
+
 
 
 </resources>

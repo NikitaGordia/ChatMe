@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityProfileSetupBinding;
@@ -62,6 +63,11 @@ public class ProfileSetupActivity extends AppCompatActivity {
                     showToast(R.string.empty_field);
                     return;
                 }
+                UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(nickname)
+                        .build();
+                user.updateProfile(profileChangeRequest);
+
                 database.getReference().child("user").child(user.getUid()).child("name").setValue(nickname);
                 String email = auth.getCurrentUser().getEmail();
                 if (email == null) email = auth.getCurrentUser().getPhoneNumber();

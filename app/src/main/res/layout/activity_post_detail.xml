@@ -135,6 +135,7 @@
                 android:layout_height="match_parent" />
 
             <TextView
+                android:id="@+id/show_comments"
                 android:padding="6dp"
                 android:text="@string/show_comments"
                 android:layout_weight="1"

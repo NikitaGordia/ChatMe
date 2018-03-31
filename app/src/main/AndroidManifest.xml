@@ -34,7 +34,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".module.postdetail.view.PostDetail" />
+        <activity android:name=".module.postdetail.view.PostDetail"
+            android:screenOrientation="portrait"/>
 
         <!-- Facebook API -->
         <meta-data

@@ -49,7 +49,7 @@ public class UsersFragment extends Fragment {
         adapter = new UsersAdapter(getContext(), getActivity());
         bind.userList.setAdapter(adapter);
 
-        db.getReference().child("user").addValueEventListener(new ValueEventListener() {
+        db.getReference().child("user").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<User> list = new LinkedList<>();

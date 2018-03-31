@@ -96,7 +96,9 @@ public class ProfileFragment extends Fragment {
                 db.getReference().child("post").child((String)dataSnapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        adapter.addPost(dataSnapshot.getValue(BlogPost.class));
+                        BlogPost post = dataSnapshot.getValue(BlogPost.class);
+                        post.setId(dataSnapshot.getKey());
+                        adapter.addPost(post);
                     }
 
                     @Override

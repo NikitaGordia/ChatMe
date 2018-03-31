@@ -14,8 +14,11 @@ import com.nikitagordia.chatme.databinding.ActivityPostDetailBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 
+import org.w3c.dom.Comment;
+
 public class PostDetail extends AppCompatActivity {
-    
+
+    private static final String EXTRA_ID = "com.nikitagordia.chatme.module.postdetail.view.PostDetail.id";
     private static final String EXTRA_NAME = "com.nikitagordia.chatme.module.postdetail.view.PostDetail.name";
     private static final String EXTRA_OWNER_ID = "com.nikitagordia.chatme.module.postdetail.view.PostDetail.owner_id";
     private static final String EXTRA_DATE = "com.nikitagordia.chatme.module.postdetail.view.PostDetail.date";
@@ -26,7 +29,9 @@ public class PostDetail extends AppCompatActivity {
 
     private ActivityPostDetailBinding bind;
 
-    private String ownerId;
+    private String ownerId, postId;
+
+    private CommentsDialog dialog;
 
     private View.OnClickListener onClickShowUser = new View.OnClickListener() {
         @Override
@@ -41,6 +46,7 @@ public class PostDetail extends AppCompatActivity {
     
     public static Intent getIntent(Context context, BlogPost post) {
         return new Intent(context, PostDetail.class)
+                .putExtra(EXTRA_ID, post.getId())
                 .putExtra(EXTRA_NAME, post.getOwner_name())
                 .putExtra(EXTRA_OWNER_ID, post.getOwner_id())
                 .putExtra(EXTRA_DATE, post.getDate())
@@ -62,6 +68,7 @@ public class PostDetail extends AppCompatActivity {
             bind.content.setText(i.getStringExtra(EXTRA_CONTENT));
 
             ownerId = i.getStringExtra(EXTRA_OWNER_ID);
+            postId = i.getStringExtra(EXTRA_ID);
 
             bind.like.setText(getResources().getString(R.string.like_cnt, i.getIntExtra(EXTRA_LIKE, 0)));
             bind.comment.setText(getResources().getString(R.string.comment_cnt, i.getIntExtra(EXTRA_COMMENT, 0)));
@@ -70,5 +77,14 @@ public class PostDetail extends AppCompatActivity {
 
         bind.nickname.setOnClickListener(onClickShowUser);
         bind.photo.setOnClickListener(onClickShowUser);
+
+        dialog = CommentsDialog.getDialog(postId);
+
+        bind.showComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show(getSupportFragmentManager(), "mytg");
+            }
+        });
     }
 }

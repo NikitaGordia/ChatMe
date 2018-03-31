@@ -16,7 +16,7 @@
             android:layout_weight="0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/card_navigation_background"
+            android:background="@color/colorPrimaryDarkBlue"
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextColor="@android:color/darker_gray"
             app:tabMode="fixed"
