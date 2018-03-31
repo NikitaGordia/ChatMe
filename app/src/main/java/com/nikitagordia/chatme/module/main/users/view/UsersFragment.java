@@ -46,15 +46,18 @@ public class UsersFragment extends Fragment {
 
 
         bind.userList.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new UsersAdapter(getContext());
+        adapter = new UsersAdapter(getContext(), getActivity());
         bind.userList.setAdapter(adapter);
 
         db.getReference().child("user").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<User> list = new LinkedList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                    list.add(snapshot.getValue(User.class));
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    user.setUid(snapshot.getKey());
+                    list.add(user);
+                }
                 adapter.updateUser(list);
             }
 

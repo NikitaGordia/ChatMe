@@ -2,6 +2,7 @@
 <layout>
 
     <LinearLayout
+        android:gravity="center"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,6 +20,7 @@
                 android:layout_weight="0"
                 android:src="@drawable/user_photo_holder"
                 android:layout_marginTop="4dp"
+                android:transitionName="photo"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
@@ -36,9 +38,10 @@
                     android:id="@+id/user_name"
                     tools:text="Nikita Gordia"
                     android:layout_marginBottom="10dp"
+                    android:transitionName="nickname"
+                    android:elevation="6dp"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:elevation="6dp"
                     android:textColor="@color/white"
                     android:fontFamily="sans-serif-condensed"
                     android:background="@drawable/edit_text_background_black"
@@ -48,45 +51,51 @@
                 <TextView
                     tools:text="nikita.gordia@gmail.com"
                     android:id="@+id/user_email"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
+                    android:textSize="10sp"
                     android:elevation="6dp"
+                    android:transitionName="email"
+                    android:textStyle="bold"
                     android:textColor="@android:color/darker_gray"
                     android:background="@drawable/edit_text_background_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
- 
+                 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/logout"
-                android:layout_margin="10dp"
-                android:src="@drawable/icon_logout"
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/status"
+                android:layout_margin="15dp"
+                android:gravity="center"
+                android:orientation="vertical"
                 android:layout_weight="0"
-                android:layout_width="20dp"
-                android:layout_height="25dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/status_img"
+                    android:layout_weight="0"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
+
+                <TextView
+                    android:id="@+id/status_tv"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textColor="@color/colorPrimaryDarkBlue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
-        <FrameLayout
+        <android.support.v7.widget.RecyclerView
+            android:layout_weight="1"
+            android:id="@+id/post_list"
+            tools:listitem="@layout/layout_blog_post"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/post_list"
-                tools:listitem="@layout/layout_blog_post"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/add_post"
-                android:layout_margin="5dp"
-                android:src="@drawable/icon_add"
-                android:layout_gravity="bottom|right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </FrameLayout>
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 </layout>

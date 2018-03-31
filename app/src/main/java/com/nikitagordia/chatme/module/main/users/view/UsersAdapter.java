@@ -1,7 +1,10 @@
 package com.nikitagordia.chatme.module.main.users.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.LayoutUserHolderBinding;
 import com.nikitagordia.chatme.module.main.users.model.User;
+import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,14 +25,17 @@ import java.util.List;
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder>{
 
     private Context context;
+    private Activity activity;
+
     private List<User> list, filter;
     private String query;
 
-    public UsersAdapter(Context context) {
+    public UsersAdapter(Context context, Activity activity) {
         list = new LinkedList<>();
         filter = new LinkedList<>();
         query = "";
         this.context = context;
+        this.activity = activity;
     }
 
     public void updateUser(List<User> users) {
@@ -69,16 +76,30 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder>{
         return filter.size();
     }
 
-    public class UserHolder extends RecyclerView.ViewHolder {
+    public class UserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private LayoutUserHolderBinding bind;
+
+        private User user;
 
         public UserHolder(LayoutUserHolderBinding bind) {
             super(bind.getRoot());
             this.bind = bind;
+            bind.body.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (user == null || user.getUid() == null || user.getUid().isEmpty()) return;
+            context.startActivity(ProfileActivity.getIntent(user.getUid(), context), ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                    new Pair<View, String>(bind.userName, "nickname"),
+                    new Pair<View, String>(bind.userEmail, "email"),
+                    new Pair<View, String>(bind.photo, "photo")
+            ).toBundle());
         }
 
         public void bind(User user) {
+            this.user = user;
             bind.userName.setText(user.getName());
             bind.userEmail.setText(user.getEmail());
         }

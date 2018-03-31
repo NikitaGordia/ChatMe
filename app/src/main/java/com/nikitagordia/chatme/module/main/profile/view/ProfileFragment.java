@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.FragmentProfileBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
+import com.nikitagordia.chatme.module.main.users.model.User;
 import com.nikitagordia.chatme.module.signin.view.SigninActivity;
 
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class ProfileFragment extends Fragment {
 
     private ListAdapter adapter;
 
-    private String userName, userId;
+    private User user;
 
     @Nullable
     @Override
@@ -62,7 +63,6 @@ public class ProfileFragment extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
-        userId = auth.getCurrentUser().getUid();
 
         adapter = new ListAdapter(getContext(), getActivity(), bind.postList);
         bind.postList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -71,6 +71,7 @@ public class ProfileFragment extends Fragment {
         bind.addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (user == null) return;
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProfileFragment.this.getContext());
                 View view = getLayoutInflater().inflate(R.layout.dialog_add_post, null);
                 final EditText content = (EditText) view.findViewById(R.id.content);
@@ -89,7 +90,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        db.getReference().child("user").child(userId).child("post_id").addChildEventListener(new ChildEventListener() {
+        db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("post_id").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 db.getReference().child("post").child((String)dataSnapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -132,21 +133,21 @@ public class ProfileFragment extends Fragment {
         dialog.setCancelable(false);
         dialog.show();
 
-        db.getReference().child("user").child(userId).child("name").runTransaction(new Transaction.Handler() {
+        db.getReference().child("user").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                return Transaction.success(mutableData);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(User.class);
+                user.setUid(auth.getCurrentUser().getUid());
+                bind.userEmail.setText(user.getEmail());
+                bind.userName.setText(user.getName());
+                dialog.cancel();
+                Toast.makeText(getContext(), getResources().getString(R.string.welcome), Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+            public void onCancelled(DatabaseError databaseError) {
                 dialog.cancel();
-                if (dataSnapshot == null) {
-                    Toast.makeText(getContext(), getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                userName = (String) dataSnapshot.getValue();
-                if (bind != null && bind.userName != null) bind.userName.setText(userName);
+                Toast.makeText(getContext(), getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -167,9 +168,21 @@ public class ProfileFragment extends Fragment {
     }
 
     void createPost(String content) {
-        String key = db.getReference().child("post").push().getKey();
-        BlogPost post = new BlogPost(content, key, userId, userName);
+        final String key = db.getReference().child("post").push().getKey();
+        BlogPost post = new BlogPost(content, key, user.getUid(), user.getName());
         db.getReference().child("post").child(key).setValue(post);
-        db.getReference().child("user").child(userId).child("post_id").push().setValue(key);
+        db.getReference().child("user").child(user.getUid()).child("post_id").push().setValue(key);
+        db.getReference().child("user").child(user.getUid()).child("follower_id").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                    db.getReference().child("user").child((String)snapshot.getValue()).child("post_id").push().setValue(key);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

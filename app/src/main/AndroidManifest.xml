@@ -24,7 +24,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".module.main.MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".module.splash.SplashActivity"
             android:screenOrientation="portrait">
@@ -34,8 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".module.postdetail.view.PostDetail" ></activity>
+        <activity android:name=".module.postdetail.view.PostDetail" />
 
         <!-- Facebook API -->
         <meta-data
@@ -58,6 +57,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity android:name=".module.profile.view.ProfileActivity"></activity>
     </application>
 
 </manifest>

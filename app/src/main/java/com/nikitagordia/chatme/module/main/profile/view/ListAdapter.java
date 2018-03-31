@@ -14,6 +14,7 @@ import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.LayoutBlogPostBinding;
 import com.nikitagordia.chatme.module.postdetail.view.PostDetail;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
+import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 import com.nikitagordia.chatme.utils.UtilsManager;
 
 import java.util.ArrayList;
@@ -58,29 +59,43 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
         return list.size();
     }
 
-    public class PostHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class PostHolder extends RecyclerView.ViewHolder {
 
         private LayoutBlogPostBinding bind;
         private BlogPost post;
 
+        private View.OnClickListener onClickShowBlog = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.startActivity(PostDetail.getIntent(context, post), ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                        new Pair<View, String>(bind.nickname, "nickname"),
+                        new Pair<View, String>(bind.photo, "photo"),
+                        new Pair<View, String>(bind.date, "date"),
+                        new Pair<View, String>(bind.content, "content"),
+                        new Pair<View, String>(bind.like, "like"),
+                        new Pair<View, String>(bind.comment, "comment"),
+                        new Pair<View, String>(bind.view, "view"),
+                        new Pair<View, String>(bind.postBody, "post_body")).toBundle());
+            }
+        };
+
+        private View.OnClickListener onClickShowUser = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.startActivity(ProfileActivity.getIntent(post.getOwner_id(), context), ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                        new Pair<View, String>(bind.photo, "photo"),
+                        new Pair<View, String>(bind.nickname, "nickname")).toBundle());
+            }
+        };
+
         public PostHolder(LayoutBlogPostBinding bind) {
             super(bind.getRoot());
             this.bind = bind;
-            bind.content.setOnClickListener(this);
-            bind.date.setOnClickListener(this);
-        }
+            bind.content.setOnClickListener(onClickShowBlog);
+            bind.date.setOnClickListener(onClickShowBlog);
 
-        @Override
-        public void onClick(View v) {
-            activity.startActivity(PostDetail.getIntent(context, post), ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
-                    new Pair<View, String>(bind.nickname, "nickname"),
-                    new Pair<View, String>(bind.photo, "photo"),
-                    new Pair<View, String>(bind.date, "date"),
-                    new Pair<View, String>(bind.content, "content"),
-                    new Pair<View, String>(bind.like, "like"),
-                    new Pair<View, String>(bind.comment, "comment"),
-                    new Pair<View, String>(bind.view, "view"),
-                    new Pair<View, String>(bind.postBody, "post_body")).toBundle());
+            bind.nickname.setOnClickListener(onClickShowUser);
+            bind.photo.setOnClickListener(onClickShowUser);
         }
 
         public void bindData(BlogPost post) {

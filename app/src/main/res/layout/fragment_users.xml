@@ -14,6 +14,7 @@
             android:hint="@string/nickname"
             android:textColor="@android:color/white"
             android:textAlignment="center"
+            android:elevation="6dp"
             android:textColorHint="@android:color/darker_gray"
             android:background="@drawable/edit_text_background_black"
             android:layout_width="match_parent"
@@ -22,6 +23,7 @@
         <LinearLayout
             android:background="@drawable/card_grey"
             android:gravity="center"
+            android:elevation="6dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

@@ -43,4 +43,13 @@
     <!--PostDetail-->
     <string name="show_likes">Show likes</string>
     <string name="show_comments">Show comments</string>
+
+    <!--Profile-->
+    <string name="follow">Follow</string>
+    <string name="you">You</string>
+    <string name="friend">Friend</string>
+    <string name="new_friend">New Friend</string>
+    <string name="remove_frient">Removed from friends</string>
+
+
 </resources>
