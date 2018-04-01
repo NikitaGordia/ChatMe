@@ -37,11 +37,25 @@ public class ProfileSetupActivity extends AppCompatActivity {
         bind = DataBindingUtil.setContentView(this, R.layout.activity_profile_setup);
 
         switch (getIntent().getIntExtra(EXTRA_SETUP_METHOD, -1)) {
-            case PROFILE_SETUP_WITH_GOOGLE : bind.method.setImageResource(R.drawable.logo_google); break;
-            case PROFILE_SETUP_WITH_FACEBOOK : bind.method.setImageResource(R.drawable.logo_facebook); break;
-            case PROFILE_SETUP_WITH_TWITTER : bind.method.setImageResource(R.drawable.logo_twitter); break;
-            case PROFILE_SETUP_WITH_PHONE : bind.method.setImageResource(R.drawable.logo_phone); break;
-            default: PROFILE_SETUP_WITH_EMAIL_AND_PASSWORD : bind.method.setImageResource(R.drawable.logo_login);
+            case PROFILE_SETUP_WITH_GOOGLE :
+                bind.methodImg.setImageResource(R.drawable.logo_google);
+                bind.methodTv.setText(R.string.google);
+                break;
+            case PROFILE_SETUP_WITH_FACEBOOK :
+                bind.methodImg.setImageResource(R.drawable.logo_facebook);
+                bind.methodTv.setText(R.string.facebook);
+                break;
+            case PROFILE_SETUP_WITH_TWITTER :
+                bind.methodImg.setImageResource(R.drawable.logo_twitter);
+                bind.methodTv.setText(R.string.twitter);
+                break;
+            case PROFILE_SETUP_WITH_PHONE :
+                bind.methodImg.setImageResource(R.drawable.logo_phone);
+                bind.methodTv.setText(R.string.phone_sms);
+                break;
+            default: PROFILE_SETUP_WITH_EMAIL_AND_PASSWORD :
+                bind.methodImg.setImageResource(R.drawable.logo_login);
+                bind.methodTv.setText(R.string.email_and_password);
         }
 
         auth = FirebaseAuth.getInstance();
