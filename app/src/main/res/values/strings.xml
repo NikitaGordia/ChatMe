@@ -53,6 +53,8 @@
     <string name="new_friend">New Friend</string>
     <string name="remove_frient">Removed from friends</string>
 
+    <string name="only_friends">Only friends</string>
+
 
 
 </resources>

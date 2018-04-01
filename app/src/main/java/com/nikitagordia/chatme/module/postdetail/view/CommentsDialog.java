@@ -62,7 +62,7 @@ public class CommentsDialog extends BottomSheetDialogFragment {
         if (!set) {
             set = true;
             postId = getArguments().getString(EXTRA_POST_ID);
-            adapter = new CommentAdapter(getContext());
+            adapter = new CommentAdapter(getContext(), getActivity());
             db.getReference().child("post").child(postId).child("comment_id").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {

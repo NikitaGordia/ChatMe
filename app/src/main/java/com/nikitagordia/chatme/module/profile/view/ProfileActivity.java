@@ -69,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (user == null || user.getUid() == null) return;
                 if (status == 3) {
                     Toast.makeText(ProfileActivity.this, getResources().getString(R.string.new_friend), Toast.LENGTH_SHORT).show();
+                    db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("friend_id").push().setValue(user.getUid());
                     db.getReference().child("user").child(user.getUid()).child("follower_id").push().setValue(auth.getCurrentUser().getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -95,6 +96,22 @@ public class ProfileActivity extends AppCompatActivity {
                             status = 3;
                             bind.statusImg.setImageResource(R.drawable.icon_follow);
                             bind.statusTv.setText(R.string.follow);
+                        }
+                    });
+                    db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("friend_id").runTransaction(new Transaction.Handler() {
+                        @Override
+                        public Transaction.Result doTransaction(MutableData mutableData) {
+                            for (MutableData data : mutableData.getChildren())
+                                if (user.getUid().equals((String)data.getValue())) {
+                                    data.setValue(null);
+                                    break;
+                                }
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
                         }
                     });
                 }
