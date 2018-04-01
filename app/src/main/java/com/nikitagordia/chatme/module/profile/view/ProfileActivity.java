@@ -26,6 +26,7 @@ import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityProfileBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.main.profile.view.ListAdapter;
+import com.nikitagordia.chatme.module.main.profile.view.ProfileFragment;
 import com.nikitagordia.chatme.module.main.users.model.User;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -119,7 +120,41 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         bind.postList.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ListAdapter(this, this, bind.postList);
+        adapter = new ListAdapter(this, this, bind.postList, new ProfileFragment.OnLikeCallback() {
+            @Override
+            public void onLike(final String postId) {
+                db.getReference().child("post").child(postId).child("like_id").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data : dataSnapshot.getChildren())
+                            if (auth.getCurrentUser().getUid().equals((String)data.getValue())) return;
+                        db.getReference().child("post").child(postId).child("like_id").push().setValue(auth.getCurrentUser().getUid());
+                        db.getReference().child("post").child(postId).child("like").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                final long x = (long)dataSnapshot.getValue() + 1;
+                                db.getReference().child("post").child(postId).child("like").setValue(x).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        adapter.updateLike(postId, x);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
         bind.postList.setAdapter(adapter);
     }
 

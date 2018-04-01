@@ -2,7 +2,6 @@ package com.nikitagordia.chatme.module.main.profile.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.LayoutBlogPostBinding;
-import com.nikitagordia.chatme.module.postdetail.view.PostDetail;
+import com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 import com.nikitagordia.chatme.utils.UtilsManager;
@@ -30,12 +29,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
     private Activity activity;
     private Context context;
     private RecyclerView view;
+    private ProfileFragment.OnLikeCallback likeCallback;
 
-    public ListAdapter(Context context, Activity activity, RecyclerView view) {
+    public ListAdapter(Context context, Activity activity, RecyclerView view, ProfileFragment.OnLikeCallback likeCallback) {
         list = new ArrayList<>();
         this.activity = activity;
         this.context = context;
         this.view = view;
+        this.likeCallback = likeCallback;
     }
 
     @Override
@@ -54,6 +55,21 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
         notifyItemInserted(0);
     }
 
+    public void updateLike(String postId, long likes) {
+        for (int i = 0; i < list.size(); i++)
+            if (list.get(i).getId().equals(postId)) {
+                list.get(i).setLike(likes);
+                notifyItemChanged(i);
+                return;
+            }
+    }
+
+    public void clear() {
+        int x = list.size();
+        list.clear();
+        notifyItemRangeRemoved(0, x);
+    }
+
     @Override
     public int getItemCount() {
         return list.size();
@@ -67,7 +83,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
         private View.OnClickListener onClickShowBlog = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.startActivity(PostDetail.getIntent(context, post), ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                activity.startActivity(PostDetailActivity.getIntent(context, post), ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
                         new Pair<View, String>(bind.nickname, "nickname"),
                         new Pair<View, String>(bind.photo, "photo"),
                         new Pair<View, String>(bind.date, "date"),
@@ -96,6 +112,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
 
             bind.nickname.setOnClickListener(onClickShowUser);
             bind.photo.setOnClickListener(onClickShowUser);
+            bind.like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    likeCallback.onLike(post.getId());
+                }
+            });
         }
 
         public void bindData(BlogPost post) {

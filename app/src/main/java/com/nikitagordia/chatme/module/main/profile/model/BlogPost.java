@@ -21,7 +21,7 @@ public class BlogPost {
 
     private String content;
 
-    private int view, comment, like;
+    private long view, comment, like;
 
     public BlogPost() {}
 
@@ -82,27 +82,27 @@ public class BlogPost {
         this.content = content;
     }
 
-    public int getView() {
+    public long getView() {
         return view;
     }
 
-    public void setView(int view) {
+    public void setView(long view) {
         this.view = view;
     }
 
-    public int getComment() {
+    public long getComment() {
         return comment;
     }
 
-    public void setComment(int comment) {
+    public void setComment(long comment) {
         this.comment = comment;
     }
 
-    public int getLike() {
+    public long getLike() {
         return like;
     }
 
-    public void setLike(int like) {
+    public void setLike(long like) {
         this.like = like;
     }
 }

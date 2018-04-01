@@ -40,7 +40,7 @@
     <!--AddPostDialog-->
     <string name="post">Post</string>
 
-    <!--PostDetail-->
+    PostDetailActivitytail-->
     <string name="show_likes">Show likes</string>
     <string name="show_comments">Show comments</string>
     <string name="sent">Sent</string>
