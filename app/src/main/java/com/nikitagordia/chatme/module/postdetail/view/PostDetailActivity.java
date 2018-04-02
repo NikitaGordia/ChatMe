@@ -47,8 +47,6 @@ public class PostDetailActivity extends AppCompatActivity {
     private FirebaseDatabase db;
     private FirebaseAuth auth;
 
-    private long view, like, comment;
-
     private View.OnClickListener onClickShowUser = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -89,12 +87,9 @@ public class PostDetailActivity extends AppCompatActivity {
             ownerId = i.getStringExtra(EXTRA_OWNER_ID);
             postId = i.getStringExtra(EXTRA_ID);
 
-            like = i.getLongExtra(EXTRA_LIKE, 0);
-            comment = i.getLongExtra(EXTRA_COMMENT, 0);
-            view = i.getLongExtra(EXTRA_VIEW, 0);
-            bind.like.setText(getResources().getString(R.string.like_cnt, like));
-            bind.comment.setText(getResources().getString(R.string.comment_cnt, comment));
-            bind.view.setText(getResources().getString(R.string.view_cnt, view));
+            bind.like.setText(getResources().getString(R.string.like_cnt, i.getLongExtra(EXTRA_LIKE, 0)));
+            bind.comment.setText(getResources().getString(R.string.comment_cnt, i.getLongExtra(EXTRA_COMMENT, 0)));
+            bind.view.setText(getResources().getString(R.string.view_cnt, i.getLongExtra(EXTRA_VIEW, 0)));
 
             db.getReference().child("post").child(postId).child("view_id").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -137,6 +132,43 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onClose() {
                 updateResult();
+            }
+        });
+
+        bind.like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.getReference().child("post").child(postId).child("like_id").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snap : dataSnapshot.getChildren())
+                            if (auth.getCurrentUser().getUid().equals((String)snap.getValue())) return;
+                        db.getReference().child("post").child(postId).child("like_id").push().setValue(auth.getCurrentUser().getUid());
+                        db.getReference().child("post").child(postId).child("like").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                final long x = (long)dataSnapshot.getValue() + 1;
+                                db.getReference().child("post").child(postId).child("like").setValue(x).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        bind.like.setText(getResources().getString(R.string.like_cnt, x));
+                                        updateResult();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 
