@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,6 +93,49 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
+
+        if (childEventListener == null) {
+            childEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    db.getReference().child("post").child((String)dataSnapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            BlogPost post = dataSnapshot.getValue(BlogPost.class);
+                            post.setId(dataSnapshot.getKey());
+                            adapter.addPost(post);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+            db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("post_id").addChildEventListener(childEventListener);
+        }
+
         bind.postList.setLayoutManager(new LinearLayoutManager(getContext()));
         bind.postList.setAdapter(adapter);
 
@@ -175,58 +219,10 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        update();
-    }
+    public void updatePost(String postId, long like, long comment, long view) {
+        adapter.updatePost(postId, like, comment, view);
 
-    private void update() {
-        if (childEventListener == null) {
-            childEventListener = new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    db.getReference().child("post").child((String)dataSnapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            BlogPost post = dataSnapshot.getValue(BlogPost.class);
-                            post.setId(dataSnapshot.getKey());
-                            adapter.addPost(post);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-            db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("post_id").addChildEventListener(childEventListener);
-        } else {
-            adapter.clear();
-            db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("post_id").removeEventListener(childEventListener);
-            db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("post_id").addChildEventListener(childEventListener);
-        }
+        Log.d("mytg", "adapter");
     }
 
     public interface OnLikeCallback {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,9 +51,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
     }
 
     public void addPost(BlogPost post) {
-        view.scrollToPosition(0);
         list.add(0, post);
-        notifyItemInserted(0);
+        notifyDataSetChanged();
+        view.scrollToPosition(0);
     }
 
     public void updateLike(String postId, long likes) {
@@ -64,10 +65,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
             }
     }
 
-    public void clear() {
-        int x = list.size();
-        list.clear();
-        notifyItemRangeRemoved(0, x);
+    public void updatePost(String post, long like, long comment, long view) {
+        for (int i = 0; i < list.size(); i++)
+            if (list.get(i).getId().equals(post)) {
+                list.get(i).setLike(like);
+                list.get(i).setComment(comment);
+                list.get(i).setView(view);
+                notifyItemChanged(i);
+                return;
+            }
     }
 
     @Override
@@ -83,7 +89,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
         private View.OnClickListener onClickShowBlog = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.startActivity(PostDetailActivity.getIntent(context, post), ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                activity.startActivityForResult(PostDetailActivity.getIntent(context, post), 0, ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
                         new Pair<View, String>(bind.nickname, "nickname"),
                         new Pair<View, String>(bind.photo, "photo"),
                         new Pair<View, String>(bind.date, "date"),

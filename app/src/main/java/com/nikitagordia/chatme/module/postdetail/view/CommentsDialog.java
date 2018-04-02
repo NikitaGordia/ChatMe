@@ -2,6 +2,7 @@ package com.nikitagordia.chatme.module.postdetail.view;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -42,6 +43,8 @@ public class CommentsDialog extends BottomSheetDialogFragment {
 
     private boolean set = false;
 
+    private OnCloseListener callback;
+
 
 
     public static CommentsDialog getDialog(String commentId) {
@@ -55,6 +58,16 @@ public class CommentsDialog extends BottomSheetDialogFragment {
     public CommentsDialog() {
         db = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+    }
+
+    public void setCallback(OnCloseListener callback) {
+        this.callback = callback;
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        callback.onClose();
     }
 
     @SuppressLint("RestrictedApi")
@@ -139,5 +152,9 @@ public class CommentsDialog extends BottomSheetDialogFragment {
                 });
             }
         });
+    }
+
+    public interface OnCloseListener {
+        void onClose();
     }
 }

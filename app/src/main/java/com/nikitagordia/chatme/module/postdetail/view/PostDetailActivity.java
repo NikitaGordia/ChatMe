@@ -1,6 +1,8 @@
 package com.nikitagordia.chatme.module.postdetail.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
@@ -27,14 +29,14 @@ import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 
 public class PostDetailActivity extends AppCompatActivity {
 
-    private static final String EXTRA_ID = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.id";
+    public static final String EXTRA_ID = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.id";
     private static final String EXTRA_NAME = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.name";
     private static final String EXTRA_OWNER_ID = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.owner_id";
     private static final String EXTRA_DATE = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.date";
     private static final String EXTRA_CONTENT = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.context";
-    private static final String EXTRA_LIKE = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.like";
-    private static final String EXTRA_COMMENT = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.comment";
-    private static final String EXTRA_VIEW = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.view";
+    public static final String EXTRA_LIKE = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.like";
+    public static final String EXTRA_COMMENT = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.comment";
+    public static final String EXTRA_VIEW = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.view";
 
     private ActivityPostDetailBinding bind;
 
@@ -44,6 +46,8 @@ public class PostDetailActivity extends AppCompatActivity {
 
     private FirebaseDatabase db;
     private FirebaseAuth auth;
+
+    private long view, like, comment;
 
     private View.OnClickListener onClickShowUser = new View.OnClickListener() {
         @Override
@@ -85,9 +89,12 @@ public class PostDetailActivity extends AppCompatActivity {
             ownerId = i.getStringExtra(EXTRA_OWNER_ID);
             postId = i.getStringExtra(EXTRA_ID);
 
-            bind.like.setText(getResources().getString(R.string.like_cnt, i.getLongExtra(EXTRA_LIKE, 0)));
-            bind.comment.setText(getResources().getString(R.string.comment_cnt, i.getLongExtra(EXTRA_COMMENT, 0)));
-            bind.view.setText(getResources().getString(R.string.view_cnt, i.getLongExtra(EXTRA_VIEW, 0)));
+            like = i.getLongExtra(EXTRA_LIKE, 0);
+            comment = i.getLongExtra(EXTRA_COMMENT, 0);
+            view = i.getLongExtra(EXTRA_VIEW, 0);
+            bind.like.setText(getResources().getString(R.string.like_cnt, like));
+            bind.comment.setText(getResources().getString(R.string.comment_cnt, comment));
+            bind.view.setText(getResources().getString(R.string.view_cnt, view));
 
             db.getReference().child("post").child(postId).child("view_id").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -103,6 +110,7 @@ public class PostDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     bind.view.setText(getResources().getString(R.string.view_cnt, x));
+                                    updateResult();
                                 }
                             });
                         }
@@ -125,6 +133,12 @@ public class PostDetailActivity extends AppCompatActivity {
         bind.photo.setOnClickListener(onClickShowUser);
 
         dialog = CommentsDialog.getDialog(postId);
+        dialog.setCallback(new CommentsDialog.OnCloseListener() {
+            @Override
+            public void onClose() {
+                updateResult();
+            }
+        });
 
         bind.showComments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,11 +148,26 @@ public class PostDetailActivity extends AppCompatActivity {
         });
     }
 
-    public void commentAdded(long x) {
-        bind.comment.setText(getResources().getString(R.string.comment_cnt, x));
+    public void updateResult() {
+        db.getReference().child("post").child(postId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Intent i = new Intent();
+                i.putExtra(EXTRA_LIKE, (Long)dataSnapshot.child("like").getValue());
+                i.putExtra(EXTRA_COMMENT, (Long)dataSnapshot.child("comment").getValue());
+                i.putExtra(EXTRA_VIEW, (Long)dataSnapshot.child("view").getValue());
+                i.putExtra(EXTRA_ID, postId);
+                setResult(Activity.RESULT_OK, i);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    public void likeAdded() {
-
+    public void commentAdded(long x) {
+        bind.comment.setText(getResources().getString(R.string.comment_cnt, x));
     }
 }
