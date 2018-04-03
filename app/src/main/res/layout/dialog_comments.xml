@@ -38,8 +38,8 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/sent"
-                android:text="@string/sent"
+                android:id="@+id/send"
+                android:text="@string/send"
                 android:padding="20dp"
                 android:fontFamily="sans-serif-condensed"
                 android:textColor="@color/colorAccent"

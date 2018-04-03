@@ -50,13 +50,13 @@
     <string name="you">You</string>
     <string name="friend">Friend</string>
     <string name="new_friend">New Friend</string>
-    <string name="remove_frient">Removed from friends</string>
+    <string name="remove_friend">Removed from friends</string>
 
     <string name="only_friends">Only friends</string>
 
     <!--ChatActivity-->
     <string name="message">Message</string>
-    <string name="sent">Sent</string>
+    <string name="send">Send</string>
 
 
 </resources>

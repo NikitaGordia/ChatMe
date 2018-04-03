@@ -34,6 +34,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity android:name=".module.chat.view.ChatActivity"
+            android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".module.postdetail.view.PostDetailActivity"
             android:screenOrientation="portrait" />
@@ -62,7 +67,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".chat.view.ChatActivity"></activity>
     </application>
 
 </manifest>

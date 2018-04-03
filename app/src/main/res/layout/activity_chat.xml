@@ -3,16 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:gravity="bottom"
+        android:background="@drawable/background"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            tools:listitem="@layout/layout_message_holder_right"
+            android:id="@+id/message_list"
+            tools:listitem="@layout/layout_message_holder_left"
             android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="0dp"/>
 
         <LinearLayout
             android:gravity="center"
@@ -22,6 +23,7 @@
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/content"
                 android:maxLines="8"
                 android:layout_weight="1"
                 android:hint="@string/message"
@@ -32,8 +34,9 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:id="@+id/send"
                 android:padding="10dp"
-                android:text="@string/sent"
+                android:text="@string/send"
                 android:fontFamily="sans-serif-condensed"
                 android:textColor="@color/colorAccent"
                 android:layout_width="wrap_content"

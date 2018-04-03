@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#FF3A434C</color>
     <color name="colorAccent">#f3bf6b</color>
 
+    <color name="colorAccentDark">#c79a52</color>
+
 
     <color name="like">#e5fd807b</color>
     <color name="comment">#c293bc41</color>

@@ -25,6 +25,7 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityProfileBinding;
+import com.nikitagordia.chatme.module.chat.view.ChatActivity;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.main.profile.view.ListAdapter;
 import com.nikitagordia.chatme.module.main.profile.view.ProfileFragment;
@@ -82,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     });
                 } else if (status == 2) {
-                    Toast.makeText(ProfileActivity.this, getResources().getString(R.string.remove_frient), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, getResources().getString(R.string.remove_friend), Toast.LENGTH_SHORT).show();
                     db.getReference().child("user").child(user.getUid()).child("follower_id").runTransaction(new Transaction.Handler() {
                         @Override
                         public Transaction.Result doTransaction(MutableData mutableData) {
@@ -270,7 +271,23 @@ public class ProfileActivity extends AppCompatActivity {
         bind.chatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db.getReference().child("user").child(user.getUid()).child("chat_id").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() == null) {
+                            String key = db.getReference().child("chat").push().getKey();
+                            db.getReference().child("user").child(user.getUid()).child("chat_id").child(auth.getCurrentUser().getUid()).setValue(key);
+                            db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("chat_id").child(user.getUid()).setValue(key);
+                            startActivity(ChatActivity.getIntent(key, ProfileActivity.this));
+                        } else {
+                            startActivity(ChatActivity.getIntent((String)dataSnapshot.getValue(), ProfileActivity.this));
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
             }
         });
     }
