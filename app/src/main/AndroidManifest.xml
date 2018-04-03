@@ -34,12 +34,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".module.postdetail.view.PostDetailActivity"
-            android:screenOrientation="portrait"/>
-
-
-        <activity android:name=".module.profile.view.ProfileActivity"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".module.postdetail.view.PostDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".module.profile.view.ProfileActivity"
+            android:screenOrientation="portrait" />
 
         <!-- Facebook API -->
         <meta-data
@@ -62,6 +62,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity android:name=".chat.view.ChatActivity"></activity>
     </application>
 
 </manifest>

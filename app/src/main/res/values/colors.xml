@@ -14,5 +14,7 @@
     <color name="white">#FFEAEFF3</color>
     <color name="colorPrimaryDarkBlue">#142536</color>
 
+    <color name="colorMessageRight">#FF6A97C4</color>
+
     <color name="background">#55000000</color>
 </resources>

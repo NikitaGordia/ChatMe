@@ -266,5 +266,12 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+
+        bind.chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 }
