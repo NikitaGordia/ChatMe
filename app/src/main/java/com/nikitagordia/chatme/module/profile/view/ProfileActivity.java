@@ -1,5 +1,6 @@
 package com.nikitagordia.chatme.module.profile.view;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.main.profile.view.ListAdapter;
 import com.nikitagordia.chatme.module.main.profile.view.ProfileFragment;
 import com.nikitagordia.chatme.module.main.users.model.User;
+import com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -219,6 +221,19 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            adapter.updatePost(
+                    data.getStringExtra(PostDetailActivity.EXTRA_ID),
+                    data.getLongExtra(PostDetailActivity.EXTRA_LIKE, 0),
+                    data.getLongExtra(PostDetailActivity.EXTRA_COMMENT, 0),
+                    data.getLongExtra(PostDetailActivity.EXTRA_VIEW, 0)
+            );
+        }
     }
 
     private void setupStatus() {

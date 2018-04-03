@@ -221,8 +221,6 @@ public class ProfileFragment extends Fragment {
 
     public void updatePost(String postId, long like, long comment, long view) {
         adapter.updatePost(postId, like, comment, view);
-
-        Log.d("mytg", "adapter");
     }
 
     public interface OnLikeCallback {
