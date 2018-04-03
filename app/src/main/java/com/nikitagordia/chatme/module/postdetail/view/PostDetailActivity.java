@@ -2,7 +2,6 @@ package com.nikitagordia.chatme.module.postdetail.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
@@ -10,7 +9,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,12 +17,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityPostDetailBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
+import com.nikitagordia.chatme.module.postdetail.view.commentsdialog.CommentsDialog;
+import com.nikitagordia.chatme.module.postdetail.view.likedialog.LikesDialog;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 
 public class PostDetailActivity extends AppCompatActivity {
@@ -42,7 +40,8 @@ public class PostDetailActivity extends AppCompatActivity {
 
     private String ownerId, postId;
 
-    private CommentsDialog dialog;
+    private CommentsDialog dialogComments;
+    private LikesDialog dialogLikes;
 
     private FirebaseDatabase db;
     private FirebaseAuth auth;
@@ -127,13 +126,15 @@ public class PostDetailActivity extends AppCompatActivity {
         bind.nickname.setOnClickListener(onClickShowUser);
         bind.photo.setOnClickListener(onClickShowUser);
 
-        dialog = CommentsDialog.getDialog(postId);
-        dialog.setCallback(new CommentsDialog.OnCloseListener() {
+        dialogComments = CommentsDialog.getDialog(postId);
+        dialogComments.setCallback(new CommentsDialog.OnCloseListener() {
             @Override
             public void onClose() {
                 updateResult();
             }
         });
+
+        dialogLikes = LikesDialog.getDialogInstance(postId);
 
         bind.like.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +176,14 @@ public class PostDetailActivity extends AppCompatActivity {
         bind.showComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show(getSupportFragmentManager(), "mytg");
+                dialogComments.show(getSupportFragmentManager(), "mytg");
+            }
+        });
+
+        bind.showLikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogLikes.show(getSupportFragmentManager(), "mytg");
             }
         });
     }
