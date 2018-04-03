@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.nikitagordia.chatme"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -33,8 +33,14 @@ dependencies {
     implementation 'com.facebook.android:facebook-login:[4,5)'
     implementation 'com.google.android.gms:play-services-auth:12.0.0'
     implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
-
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 }
+
+
+
+
+
+
 
 
 

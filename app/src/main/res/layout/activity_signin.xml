@@ -49,13 +49,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/google_btn"
+                <ImageView
+                    android:id="@+id/google_img"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:background="@drawable/logo_google"/>
 
                 <TextView
+                    android:id="@+id/google_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/google" />
@@ -70,13 +71,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/twitter_btn"
+                <ImageView
+                    android:id="@+id/twitter_img"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:background="@drawable/logo_twitter" />
 
                 <TextView
+                    android:id="@+id/twitter_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/twitter" />
@@ -91,25 +93,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/facebook_btn"
+                <ImageView
+                    android:id="@+id/facebook_img"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:background="@drawable/logo_facebook" />
 
                 <TextView
+                    android:id="@+id/facebook_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/facebook" />
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/login"
+            <ImageView
+                android:id="@+id/login_img"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:visibility="invisible"
                 android:background="@drawable/logo_login" />
+
+
+            <TextView
+                android:id="@+id/login_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:visibility="invisible"
+                android:text="@string/email_and_password" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -119,26 +130,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/phone_btn"
+                <ImageView
+                    android:id="@+id/phone_img"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:background="@drawable/logo_phone" />
 
                 <TextView
+                    android:id="@+id/phone_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/phone_sms" />
 
             </LinearLayout>
 
-
-            <TextView
-                android:id="@+id/login_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="17dp"
-                android:visibility="invisible"
-                android:text="@string/email_and_password" />
         </FrameLayout>
 
         <LinearLayout

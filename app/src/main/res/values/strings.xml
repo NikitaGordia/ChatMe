@@ -7,6 +7,7 @@
     <string name="com.twitter.sdk.android.CONSUMER_KEY">nk02m5V1uLaVA9bNflWeDZpNj</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">3mePLHbik7HYI8Xyi2olITJObthZmyrza0ppS9pSJ3gkkh4Grc</string>
 
+    <!--SigninActivity-->
     <string name="sign_in">Sign in with</string>
     <string name="create_account">Create an simple account</string>
     <string name="email_and_password">Email and password</string>
@@ -19,10 +20,41 @@
     <string name="empty_field">Empty field</string>
     <string name="loading">Loading, please wait...</string>
     <string name="phone">Phone</string>
-
     <string name="twitter">Twitter</string>
     <string name="facebook">Facebook</string>
     <string name="google">Google</string>
     <string name="phone_sms">Phone SMS</string>
+
+    <!--ProfileSetupActivity-->
+    <string name="nickname">Nickname</string>
+    <string name="photo_tv">Tap to choose profile photo</string>
+
+    <!--ProfileFragment-->
+    <string name="home">Home</string>
+    <string name="post_example">And another one bites the dust Oh why can I not conquer love? And I might have thought that we were one Wanted to fight this war without weapon\nWell, I\'ve got thick skin and an elastic heart, But your blade - it mightbe too sharp I'm like a rubber band until you pull too hard, Yeah, I may snap and I move fast But you won't see me fall apart 'Cause I've got an elastic heart</string>
+
+    <string name="like_cnt">%1$d Like</string>
+    <string name="view_cnt">%1$d View</string>
+    <string name="comment_cnt">%1$d Comment</string>
+
+    <!--AddPostDialog-->
+    <string name="post">Post</string>
+
+    PostDetailActivitytail-->
+    <string name="show_likes">Show likes</string>
+    <string name="show_comments">Show comments</string>
+    <string name="sent">Sent</string>
+    <string name="type_your_comment">Type comment here ...</string>
+
+    <!--Profile-->
+    <string name="follow">Follow</string>
+    <string name="you">You</string>
+    <string name="friend">Friend</string>
+    <string name="new_friend">New Friend</string>
+    <string name="remove_frient">Removed from friends</string>
+
+    <string name="only_friends">Only friends</string>
+
+
 
 </resources>
