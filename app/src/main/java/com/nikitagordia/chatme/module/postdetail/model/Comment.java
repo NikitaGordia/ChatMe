@@ -6,7 +6,7 @@ package com.nikitagordia.chatme.module.postdetail.model;
 
 public class Comment {
 
-    private String owner_uid;
+    private String owner_id;
 
     private String context;
 
@@ -19,12 +19,12 @@ public class Comment {
         this.context = context;
     }
 
-    public String getOwner_uid() {
-        return owner_uid;
+    public String getOwner_id() {
+        return owner_id;
     }
 
-    public void setOwner_uid(String owner_uid) {
-        this.owner_uid = owner_uid;
+    public void setOwner_id(String owner_id) {
+        this.owner_id = owner_id;
     }
 
     public String getContext() {

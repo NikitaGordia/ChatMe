@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -81,7 +83,7 @@ public class SigninActivity extends AppCompatActivity {
 
     private ProgressDialog dialog;
 
-    private View lastOpen;
+    private View lastOpenImg, lastOpenTv;
     private int lastOpenId;
 
     private boolean isAnimated;
@@ -112,13 +114,16 @@ public class SigninActivity extends AppCompatActivity {
                             dialog.cancel();
 
                             if (dataSnapshot.getValue() == null) {
-                                if (lastOpen == null) {
+                                if (lastOpenImg == null || lastOpenTv == null) {
                                     startActivity(new Intent(SigninActivity.this, ProfileSetupActivity.class));
                                     return;
                                 }
                                 Intent i = new Intent(SigninActivity.this, ProfileSetupActivity.class);
                                 i.putExtra(ProfileSetupActivity.EXTRA_SETUP_METHOD, lastOpenId);
-                                startActivity(i, ActivityOptionsCompat.makeSceneTransitionAnimation(SigninActivity.this, lastOpen, "provider").toBundle());
+                                startActivity(i, ActivityOptionsCompat.makeSceneTransitionAnimation(SigninActivity.this,
+                                        new Pair<View, String>(lastOpenImg, "provider_img"),
+                                        new Pair<View, String>(lastOpenTv, "provider_tv")
+                                ).toBundle());
                             } else {
                                 startActivity(new Intent(SigninActivity.this, MainActivity.class));
                             }
@@ -183,12 +188,13 @@ public class SigninActivity extends AppCompatActivity {
                 .build();
         Twitter.initialize(config);
         twitterClient = new TwitterAuthClient();
-        bind.twitterBtn.setOnClickListener(new View.OnClickListener() {
+        bind.twitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_TWITTER;
-                lastOpen = bind.twitter;
+                lastOpenImg = bind.twitterImg;
+                lastOpenTv = bind.twitterTv;
                 twitterClient.authorize(SigninActivity.this, new Callback<TwitterSession>() {
                     @Override
                     public void success(Result<TwitterSession> result) {
@@ -227,11 +233,12 @@ public class SigninActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
-        bind.facebookBtn.setOnClickListener(new View.OnClickListener() {
+        bind.facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_FACEBOOK;
-                lastOpen = bind.facebook;
+                lastOpenImg = bind.facebookImg;
+                lastOpenTv = bind.facebookTv;
                 loginManager.logInWithReadPermissions(SigninActivity.this, Arrays.asList("email", "public_profile"));
             }
         });
@@ -252,11 +259,11 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     private void loginSetup() {
-        bind.login.setOnClickListener(new View.OnClickListener() {
+        bind.loginImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_EMAIL_AND_PASSWORD;
-                lastOpen = bind.login;
+                lastOpenImg = bind.loginImg;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(SigninActivity.this);
                 View view = getLayoutInflater().inflate(R.layout.dialog_email_password_holder, null);
@@ -280,11 +287,12 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     private void phoneSetup() {
-        bind.phoneBtn.setOnClickListener(new View.OnClickListener() {
+        bind.phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_PHONE;
-                lastOpen = bind.phone;
+                lastOpenImg = bind.phoneImg;
+                lastOpenTv = bind.phoneTv;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(SigninActivity.this);
                 View view = getLayoutInflater().inflate(R.layout.dialog_phone_holder, null);
@@ -321,11 +329,12 @@ public class SigninActivity extends AppCompatActivity {
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        bind.googleBtn.setOnClickListener(new View.OnClickListener() {
+        bind.google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                lastOpenImg = bind.googleImg;
+                lastOpenTv = bind.googleTv;
                 lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_GOOGLE;
-                lastOpen = bind.google;
                 dialog.show();
                 startActivityForResult(Auth.GoogleSignInApi.getSignInIntent(client), GOOGLE_REQUEST_CODE);
             }
@@ -388,9 +397,9 @@ public class SigninActivity extends AppCompatActivity {
                 (float)(centerY - r * Math.sin(Const.FACEBOOK_ANGLE) - bind.facebook.getMeasuredHeight() / 2d),
                 Const.FACEBOOK_SHOW_DURATION);
 
-        showAnimation(bind.login,
-                bind.area.getMeasuredWidth() / 2 - bind.login.getMeasuredWidth() / 2,
-                3 * bind.area.getMeasuredHeight() / 4 - bind.login.getMeasuredHeight() / 2,
+        showAnimation(bind.loginImg,
+                bind.area.getMeasuredWidth() / 2 - bind.loginImg.getMeasuredWidth() / 2,
+                3 * bind.area.getMeasuredHeight() / 4 - bind.loginImg.getMeasuredHeight() / 2,
                 Const.LOGIN_SHOW_DURATION);
     }
 
@@ -402,7 +411,7 @@ public class SigninActivity extends AppCompatActivity {
 
     private void showLoginText() {
         bind.loginTv.setX(bind.area.getMeasuredWidth() / 2 - bind.loginTv.getMeasuredWidth() / 2);
-        bind.loginTv.setY(3 * bind.area.getMeasuredHeight() / 4 + bind.login.getMeasuredHeight() / 2 + bind.loginTv.getMeasuredHeight() / 2);
+        bind.loginTv.setY(3 * bind.area.getMeasuredHeight() / 4 + bind.loginImg.getMeasuredHeight() / 2 + bind.loginTv.getMeasuredHeight() / 2);
         bind.loginTv.setVisibility(View.VISIBLE);
         ObjectAnimator animator = ObjectAnimator.ofFloat(bind.loginTv, "alpha", 0f, 1f).setDuration(Const.LOGIN_SHOW_DURATION);
         ObjectAnimator animatorScaleX = ObjectAnimator.ofFloat(bind.loginTv, "scaleX", 0.7f, 1f).setDuration(Const.LOGIN_SHOW_DURATION);

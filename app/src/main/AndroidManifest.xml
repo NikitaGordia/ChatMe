@@ -34,8 +34,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".module.postdetail.view.PostDetail"
+        <activity android:name=".module.postdetail.view.PostDetailActivity"
             android:screenOrientation="portrait"/>
+
+
+        <activity android:name=".module.profile.view.ProfileActivity"
+            android:screenOrientation="portrait"></activity>
 
         <!-- Facebook API -->
         <meta-data
@@ -58,7 +62,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".module.profile.view.ProfileActivity"></activity>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.nikitagordia.chatme.module.profile.view;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +27,9 @@ import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityProfileBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.main.profile.view.ListAdapter;
+import com.nikitagordia.chatme.module.main.profile.view.ProfileFragment;
 import com.nikitagordia.chatme.module.main.users.model.User;
+import com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -69,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (user == null || user.getUid() == null) return;
                 if (status == 3) {
                     Toast.makeText(ProfileActivity.this, getResources().getString(R.string.new_friend), Toast.LENGTH_SHORT).show();
+                    db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("friend_id").push().setValue(user.getUid());
                     db.getReference().child("user").child(user.getUid()).child("follower_id").push().setValue(auth.getCurrentUser().getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -97,12 +101,62 @@ public class ProfileActivity extends AppCompatActivity {
                             bind.statusTv.setText(R.string.follow);
                         }
                     });
+                    db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("friend_id").runTransaction(new Transaction.Handler() {
+                        @Override
+                        public Transaction.Result doTransaction(MutableData mutableData) {
+                            for (MutableData data : mutableData.getChildren())
+                                if (user.getUid().equals((String)data.getValue())) {
+                                    data.setValue(null);
+                                    break;
+                                }
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+                        }
+                    });
                 }
             }
         });
 
         bind.postList.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ListAdapter(this, this, bind.postList);
+        adapter = new ListAdapter(this, this, bind.postList, new ProfileFragment.OnLikeCallback() {
+            @Override
+            public void onLike(final String postId) {
+                db.getReference().child("post").child(postId).child("like_id").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data : dataSnapshot.getChildren())
+                            if (auth.getCurrentUser().getUid().equals((String)data.getValue())) return;
+                        db.getReference().child("post").child(postId).child("like_id").push().setValue(auth.getCurrentUser().getUid());
+                        db.getReference().child("post").child(postId).child("like").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                final long x = (long)dataSnapshot.getValue() + 1;
+                                db.getReference().child("post").child(postId).child("like").setValue(x).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        adapter.updateLike(postId, x);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
         bind.postList.setAdapter(adapter);
     }
 
@@ -167,6 +221,19 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            adapter.updatePost(
+                    data.getStringExtra(PostDetailActivity.EXTRA_ID),
+                    data.getLongExtra(PostDetailActivity.EXTRA_LIKE, 0),
+                    data.getLongExtra(PostDetailActivity.EXTRA_COMMENT, 0),
+                    data.getLongExtra(PostDetailActivity.EXTRA_VIEW, 0)
+            );
+        }
     }
 
     private void setupStatus() {

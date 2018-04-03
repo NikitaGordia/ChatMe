@@ -8,17 +8,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/nickname"
+        <LinearLayout
+            android:gravity="center"
             android:layout_margin="10dp"
-            android:hint="@string/nickname"
-            android:textColor="@android:color/white"
-            android:textAlignment="center"
-            android:elevation="6dp"
-            android:textColorHint="@android:color/darker_gray"
-            android:background="@drawable/edit_text_background_black"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_weight="1"
+                android:id="@+id/nickname"
+                android:hint="@string/nickname"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:elevation="6dp"
+                android:textColorHint="@android:color/darker_gray"
+                android:background="@drawable/edit_text_background_black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <CheckBox
+                android:id="@+id/only_friends"
+                android:text="@string/only_friends"
+                android:layout_weight="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:background="@drawable/card_grey"

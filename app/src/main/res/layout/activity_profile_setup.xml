@@ -16,12 +16,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <LinearLayout
                 android:id="@+id/method"
-                tools:src="@drawable/logo_google"
-                android:transitionName="provider"
-                android:layout_width="70dp"
-                android:layout_height="70dp" />
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:transitionName="provider_img"
+                    android:id="@+id/method_img"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"/>
+
+                <TextView
+                    android:transitionName="provider_tv"
+                    android:id="@+id/method_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/google" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/info"
