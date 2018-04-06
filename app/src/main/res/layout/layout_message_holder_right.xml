@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="4dp"
-            android:background="@drawable/message_right"
+            android:background="@drawable/edit_text_background_black"
             android:maxWidth="240dp"
             android:padding="8dp"
             android:text="@string/post_example"

@@ -34,7 +34,7 @@
         <TextView
             android:id="@+id/content"
             android:text="@string/post_example"
-            android:background="@drawable/edit_text_background_black"
+            android:background="@drawable/message_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="240dp"

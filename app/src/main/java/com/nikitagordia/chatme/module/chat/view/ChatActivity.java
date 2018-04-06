@@ -64,7 +64,7 @@ public class ChatActivity extends AppCompatActivity {
         bind.messageList.setLayoutManager(linearLayoutManager);
         bind.messageList.setAdapter(adapter);
 
-        db.getReference().child("chat").child(chatId).addChildEventListener(new ChildEventListener() {
+        db.getReference().child("chat").child(chatId).child("message_id").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 db.getReference().child("message").child((String)dataSnapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,7 +104,7 @@ public class ChatActivity extends AppCompatActivity {
 
     public void createMessage(String content) {
         String key = db.getReference().child("message").push().getKey();
-        db.getReference().child("chat").child(chatId).push().setValue(key);
+        db.getReference().child("chat").child(chatId).child("message_id").push().setValue(key);
         db.getReference().child("message").child(key).setValue(new Message(auth.getCurrentUser().getUid(), auth.getCurrentUser().getDisplayName(), content));
     }
 }

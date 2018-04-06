@@ -243,6 +243,7 @@ public class ProfileActivity extends AppCompatActivity {
             bind.statusImg.setImageResource(R.drawable.icon_home);
             bind.statusTv.setText(R.string.you);
             bind.status.setVisibility(View.VISIBLE);
+            bind.chatBtn.setVisibility(View.INVISIBLE);
             return;
         }
         db.getReference().child("user").child(user.getUid()).child("follower_id").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -278,6 +279,8 @@ public class ProfileActivity extends AppCompatActivity {
                             String key = db.getReference().child("chat").push().getKey();
                             db.getReference().child("user").child(user.getUid()).child("chat_id").child(auth.getCurrentUser().getUid()).setValue(key);
                             db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("chat_id").child(user.getUid()).setValue(key);
+                            db.getReference().child("chat").child(key).child("user_id").push().setValue(user.getUid());
+                            db.getReference().child("chat").child(key).child("user_id").push().setValue(auth.getCurrentUser().getUid());
                             startActivity(ChatActivity.getIntent(key, ProfileActivity.this));
                         } else {
                             startActivity(ChatActivity.getIntent((String)dataSnapshot.getValue(), ProfileActivity.this));

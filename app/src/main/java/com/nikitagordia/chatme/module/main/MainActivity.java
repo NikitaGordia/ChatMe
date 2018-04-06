@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityMainBinding;
+import com.nikitagordia.chatme.module.main.chats.view.ChatsFragment;
 import com.nikitagordia.chatme.module.main.profile.view.ProfileFragment;
 import com.nikitagordia.chatme.module.main.users.view.UsersFragment;
 import com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity;
@@ -29,16 +30,18 @@ public class MainActivity extends AppCompatActivity {
 
         list = new Fragment[]{
                 new ProfileFragment(),
+                new ChatsFragment(),
                 new UsersFragment()
         };
 
         adapter = new FragmentPagerViewAdapter(getSupportFragmentManager(), list, new String[] {
                 getResources().getString(R.string.home),
-                "Users"
+                getResources().getString(R.string.chats),
+                getResources().getString(R.string.users)
         });
 
         bind.viewPager.setAdapter(adapter);
-        bind.viewPager.setOffscreenPageLimit(2);
+        bind.viewPager.setOffscreenPageLimit(3);
 
         bind.tabLayout.setupWithViewPager(bind.viewPager);
     }

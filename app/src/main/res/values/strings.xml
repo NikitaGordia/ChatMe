@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ChatMe</string>
 
+
     <!--API-->
     <string name="facebook_app_id">1765601310169433</string>
     <string name="fb_login_protocol_scheme">fb1765601310169433</string>
@@ -57,6 +58,9 @@
     <!--ChatActivity-->
     <string name="message">Message</string>
     <string name="send">Send</string>
+
+    <string name="users">Users</string>
+    <string name="chats">Chats</string>
 
 
 </resources>
