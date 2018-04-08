@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import com.nikitagordia.chatme.databinding.FragmentProfileBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.main.users.model.User;
 import com.nikitagordia.chatme.module.signin.view.SigninActivity;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by nikitagordia on 3/28/18.
@@ -47,6 +47,8 @@ public class ProfileFragment extends Fragment {
 
     private ListAdapter adapter;
     private ChildEventListener childEventListener;
+
+    boolean runningDialog;
 
     private User user;
 
@@ -164,16 +166,25 @@ public class ProfileFragment extends Fragment {
         dialog = new ProgressDialog(getContext());
         dialog.setMessage(getResources().getString(R.string.loading));
         dialog.setCancelable(false);
+        runningDialog = true;
         dialog.show();
 
         db.getReference().child("user").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
+                if (user == null) {
+                    auth.signOut();
+                    getActivity().finish();
+                    startActivity(new Intent(getContext(), SigninActivity.class));
+                    return;
+                }
                 user.setUid(auth.getCurrentUser().getUid());
                 bind.userEmail.setText(user.getEmail());
                 bind.userName.setText(user.getName());
+                Picasso.with(getActivity()).load(user.getPhoto_url()).into(bind.photo);
                 dialog.cancel();
+                runningDialog = false;
                 Toast.makeText(getContext(), getResources().getString(R.string.welcome), Toast.LENGTH_SHORT).show();
             }
 
@@ -202,7 +213,7 @@ public class ProfileFragment extends Fragment {
 
     void createPost(String content) {
         final String key = db.getReference().child("post").push().getKey();
-        BlogPost post = new BlogPost(content, key, user.getUid(), user.getName());
+        BlogPost post = new BlogPost(content, key, user.getUid(), user.getName(), user.getPhoto_url());
         db.getReference().child("post").child(key).setValue(post);
         db.getReference().child("user").child(user.getUid()).child("post_id").push().setValue(key);
         db.getReference().child("user").child(user.getUid()).child("follower_id").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -217,6 +228,18 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (runningDialog) dialog.show();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        dialog.cancel();
     }
 
     public void updatePost(String postId, long like, long comment, long view) {

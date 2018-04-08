@@ -25,12 +25,13 @@ public class BlogPost {
 
     public BlogPost() {}
 
-    public BlogPost(String content, String id, String owner_id, String owner_name) {
+    public BlogPost(String content, String id, String owner_id, String owner_name, String owner_photo_url) {
         view = comment = like = 0;
         this.content = content;
         this.id = id;
         this.owner_id = owner_id;
         this.owner_name = owner_name;
+        this.owner_photo_url = owner_photo_url;
         date = new SimpleDateFormat("EEE, d MMM yyyy").format(new Date()).toString();
     }
 

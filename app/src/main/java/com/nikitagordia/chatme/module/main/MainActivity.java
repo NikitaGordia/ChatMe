@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d("mytg", "Result");
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             ((ProfileFragment)list[0]).updatePost(
                     data.getStringExtra(PostDetailActivity.EXTRA_ID),

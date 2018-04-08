@@ -16,6 +16,7 @@ import com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 import com.nikitagordia.chatme.utils.UtilsManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +135,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
             bind.like.setText(context.getResources().getString(R.string.like_cnt, post.getLike()));
             bind.comment.setText(context.getResources().getString(R.string.comment_cnt, post.getComment()));
             bind.view.setText(context.getResources().getString(R.string.view_cnt, post.getView()));
+            Picasso.with(context).load(post.getOwner_photo_url()).into(bind.photo);
         }
 
     }
