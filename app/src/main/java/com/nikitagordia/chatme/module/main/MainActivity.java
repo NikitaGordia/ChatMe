@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityMainBinding;
+import com.nikitagordia.chatme.module.main.chats.view.ChatsFragment;
 import com.nikitagordia.chatme.module.main.profile.view.ProfileFragment;
 import com.nikitagordia.chatme.module.main.users.view.UsersFragment;
 import com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity;
@@ -29,16 +30,18 @@ public class MainActivity extends AppCompatActivity {
 
         list = new Fragment[]{
                 new ProfileFragment(),
+                new ChatsFragment(),
                 new UsersFragment()
         };
 
         adapter = new FragmentPagerViewAdapter(getSupportFragmentManager(), list, new String[] {
                 getResources().getString(R.string.home),
-                "Users"
+                getResources().getString(R.string.chats),
+                getResources().getString(R.string.users)
         });
 
         bind.viewPager.setAdapter(adapter);
-        bind.viewPager.setOffscreenPageLimit(2);
+        bind.viewPager.setOffscreenPageLimit(3);
 
         bind.tabLayout.setupWithViewPager(bind.viewPager);
     }
@@ -47,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d("mytg", "Result");
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             ((ProfileFragment)list[0]).updatePost(
                     data.getStringExtra(PostDetailActivity.EXTRA_ID),
