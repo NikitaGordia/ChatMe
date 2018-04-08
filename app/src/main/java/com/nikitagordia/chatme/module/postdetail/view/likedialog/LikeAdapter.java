@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.nikitagordia.chatme.databinding.LayoutLikeHolderBinding;
 import com.nikitagordia.chatme.module.main.users.model.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,8 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeHolder> {
 
         public void bind(User user) {
             bind.nickname.setText(user.getName());
+
+            if (user.getPhoto_url() != null) Picasso.with(context).load(user.getPhoto_url()).into(bind.photo);
         }
     }
 }

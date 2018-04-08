@@ -14,6 +14,7 @@ import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.LayoutUserHolderBinding;
 import com.nikitagordia.chatme.module.main.users.model.User;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -102,6 +103,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder>{
             this.user = user;
             bind.userName.setText(user.getName());
             bind.userEmail.setText(user.getEmail());
+            if (user.getPhoto_url() != null) Picasso.with(context).load(user.getPhoto_url()).into(bind.photo);
         }
     }
 }

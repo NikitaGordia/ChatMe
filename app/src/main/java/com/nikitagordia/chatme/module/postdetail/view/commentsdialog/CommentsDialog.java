@@ -127,6 +127,7 @@ public class CommentsDialog extends BottomSheetDialogFragment {
                 db.getReference().child("comment").child(s).child("context").setValue(bind.comment.getText().toString());
                 bind.comment.setText("");
                 db.getReference().child("comment").child(s).child("owner_id").setValue(auth.getCurrentUser().getUid());
+                db.getReference().child("comment").child(s).child("owner_photo_url").setValue(auth.getCurrentUser().getPhotoUrl().toString());
                 db.getReference().child("comment").child(s).child("owner_name").setValue(auth.getCurrentUser().getDisplayName());
                 db.getReference().child("post").child(postId).child("comment_id").push().setValue(s);
 

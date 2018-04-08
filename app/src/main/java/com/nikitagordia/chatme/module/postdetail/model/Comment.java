@@ -12,11 +12,21 @@ public class Comment {
 
     private String owner_name;
 
+    private String owner_photo_url;
+
     public Comment() {}
 
     public Comment(String owner_name, String context) {
         this.owner_name = owner_name;
         this.context = context;
+    }
+
+    public String getOwner_photo_url() {
+        return owner_photo_url;
+    }
+
+    public void setOwner_photo_url(String owner_photo_url) {
+        this.owner_photo_url = owner_photo_url;
     }
 
     public String getOwner_id() {

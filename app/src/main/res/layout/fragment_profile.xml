@@ -16,6 +16,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/photo"
                 android:layout_weight="0"
                 android:src="@drawable/user_photo_holder"
                 android:layout_marginTop="4dp"

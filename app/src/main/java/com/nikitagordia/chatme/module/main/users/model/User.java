@@ -12,6 +12,8 @@ public class User {
 
     private String uid;
 
+    private String photo_url;
+
     public User() {}
 
     public User(String uid, String name, String email) {
@@ -21,6 +23,14 @@ public class User {
 
     public User(String name) {
         this.name = name;
+    }
+
+    public String getPhoto_url() {
+        return photo_url;
+    }
+
+    public void setPhoto_url(String photo_url) {
+        this.photo_url = photo_url;
     }
 
     public String getName() {

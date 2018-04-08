@@ -54,13 +54,12 @@
     <string name="remove_friend">Removed from friends</string>
 
     <string name="only_friends">Only friends</string>
+    <string name="select_photo">Select photo</string>
 
-    <!--ChatActivity-->
     <string name="message">Message</string>
     <string name="send">Send</string>
 
     <string name="users">Users</string>
     <string name="chats">Chats</string>
-
 
 </resources>
