@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ChatMe</string>
 
+
     <!--API-->
     <string name="facebook_app_id">1765601310169433</string>
     <string name="fb_login_protocol_scheme">fb1765601310169433</string>
@@ -40,10 +41,9 @@
     <!--AddPostDialog-->
     <string name="post">Post</string>
 
-    PostDetailActivitytail-->
+    <!--PostDetailActivitytail-->
     <string name="show_likes">Show likes</string>
     <string name="show_comments">Show comments</string>
-    <string name="sent">Sent</string>
     <string name="type_your_comment">Type comment here ...</string>
 
     <!--Profile-->
@@ -51,10 +51,15 @@
     <string name="you">You</string>
     <string name="friend">Friend</string>
     <string name="new_friend">New Friend</string>
-    <string name="remove_frient">Removed from friends</string>
+    <string name="remove_friend">Removed from friends</string>
 
     <string name="only_friends">Only friends</string>
     <string name="select_photo">Select photo</string>
 
+    <string name="message">Message</string>
+    <string name="send">Send</string>
+
+    <string name="users">Users</string>
+    <string name="chats">Chats</string>
 
 </resources>

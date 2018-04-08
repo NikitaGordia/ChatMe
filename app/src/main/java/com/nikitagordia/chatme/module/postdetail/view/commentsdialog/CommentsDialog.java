@@ -120,7 +120,7 @@ public class CommentsDialog extends BottomSheetDialogFragment {
         bind.commentList.setLayoutManager(new LinearLayoutManager(getContext()));
         bind.commentList.setAdapter(adapter);
 
-        bind.sent.setOnClickListener(new View.OnClickListener() {
+        bind.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String s = db.getReference().child("comment").push().getKey();
