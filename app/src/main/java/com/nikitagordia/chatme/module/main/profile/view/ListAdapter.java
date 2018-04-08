@@ -135,7 +135,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
             bind.like.setText(context.getResources().getString(R.string.like_cnt, post.getLike()));
             bind.comment.setText(context.getResources().getString(R.string.comment_cnt, post.getComment()));
             bind.view.setText(context.getResources().getString(R.string.view_cnt, post.getView()));
-            Picasso.with(context).load(post.getOwner_photo_url()).into(bind.photo);
+            if (post.getOwner_photo_url() != null) Picasso.with(context).load(post.getOwner_photo_url()).into(bind.photo);
         }
 
     }

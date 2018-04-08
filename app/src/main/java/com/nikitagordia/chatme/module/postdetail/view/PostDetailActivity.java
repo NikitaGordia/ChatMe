@@ -24,12 +24,14 @@ import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.postdetail.view.commentsdialog.CommentsDialog;
 import com.nikitagordia.chatme.module.postdetail.view.likedialog.LikesDialog;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
+import com.squareup.picasso.Picasso;
 
 public class PostDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_ID = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.id";
     private static final String EXTRA_NAME = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.name";
     private static final String EXTRA_OWNER_ID = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.owner_id";
+    private static final String EXTRA_OWNER_PHOTO_URL = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.owner_photo_url";
     private static final String EXTRA_DATE = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.date";
     private static final String EXTRA_CONTENT = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.context";
     public static final String EXTRA_LIKE = "com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity.like";
@@ -66,7 +68,8 @@ public class PostDetailActivity extends AppCompatActivity {
                 .putExtra(EXTRA_CONTENT, post.getContent())
                 .putExtra(EXTRA_LIKE, post.getLike())
                 .putExtra(EXTRA_COMMENT, post.getComment())
-                .putExtra(EXTRA_VIEW, post.getView());
+                .putExtra(EXTRA_VIEW, post.getView())
+                .putExtra(EXTRA_OWNER_PHOTO_URL, post.getOwner_photo_url());
     }
 
     @Override
@@ -89,6 +92,9 @@ public class PostDetailActivity extends AppCompatActivity {
             bind.like.setText(getResources().getString(R.string.like_cnt, i.getLongExtra(EXTRA_LIKE, 0)));
             bind.comment.setText(getResources().getString(R.string.comment_cnt, i.getLongExtra(EXTRA_COMMENT, 0)));
             bind.view.setText(getResources().getString(R.string.view_cnt, i.getLongExtra(EXTRA_VIEW, 0)));
+
+            String photo = i.getStringExtra(EXTRA_OWNER_PHOTO_URL);
+            if (photo != null) Picasso.with(this).load(photo).into(bind.photo);
 
             db.getReference().child("post").child(postId).child("view_id").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

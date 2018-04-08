@@ -30,6 +30,7 @@ import com.nikitagordia.chatme.module.main.profile.view.ListAdapter;
 import com.nikitagordia.chatme.module.main.profile.view.ProfileFragment;
 import com.nikitagordia.chatme.module.main.users.model.User;
 import com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity;
+import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -170,6 +171,7 @@ public class ProfileActivity extends AppCompatActivity {
                 user.setUid(uid);
                 bind.userEmail.setText(user.getEmail());
                 bind.userName.setText(user.getName());
+                if (user.getPhoto_url() != null) Picasso.with(ProfileActivity.this).load(user.getPhoto_url()).into(bind.photo);
                 setupStatus();
                 dialog.cancel();
                 loadPosts();
