@@ -3,6 +3,7 @@ package com.nikitagordia.chatme.module.main.chats.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import com.nikitagordia.chatme.databinding.LayoutChatHolderBinding;
 import com.nikitagordia.chatme.module.chat.view.ChatActivity;
 import com.nikitagordia.chatme.module.main.chats.model.Chat;
+import com.nikitagordia.chatme.utils.ImageUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +79,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder> {
             bind.chatName.setText(chat.getChat_name());
             bind.lastMessage.setText(chat.getLast_message());
             bind.time.setText(chat.getTime());
+
+            if (chat.getPhoto_url() != null) {
+                Picasso.with(context).load(chat.getPhoto_url()).resize(ImageUtils.SIZE_XL, ImageUtils.SIZE_XL).into(bind.photo);
+            }
         }
     }
 }

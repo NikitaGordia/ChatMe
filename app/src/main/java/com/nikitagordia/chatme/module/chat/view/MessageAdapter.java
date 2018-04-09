@@ -2,6 +2,7 @@ package com.nikitagordia.chatme.module.chat.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import com.nikitagordia.chatme.databinding.LayoutMessageHolderRightBinding;
 import com.nikitagordia.chatme.module.chat.model.Message;
 import com.nikitagordia.chatme.databinding.LayoutMessageHolderLeftBinding;
+import com.nikitagordia.chatme.utils.ImageUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -25,12 +28,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
     private RecyclerView view;
     private String auth;
 
+    private Context context;
+
     private List<Message> list;
 
-    public MessageAdapter(RecyclerView view, String auth) {
+    public MessageAdapter(Context context, RecyclerView view, String auth) {
         this.view = view;
         this.auth = auth;
         list = new ArrayList<>();
+        this.context = context;
     }
 
     @Override
@@ -74,6 +80,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
             bind.content.setText(message.getContent());
             bind.date.setText(message.getDate());
             bind.nickname.setText(message.getOwner_nickname());
+
+            if (message.getOwner_photo_url() != null) Picasso.with(context).load(message.getOwner_photo_url()).resize(ImageUtils.SIZE_M, ImageUtils.SIZE_M).into(bind.photo);
         }
     }
 
@@ -91,6 +99,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
             bind.content.setText(message.getContent());
             bind.date.setText(message.getDate());
             bind.nickname.setText(message.getOwner_nickname());
+
+            if (message.getOwner_photo_url() != null) Picasso.with(context).load(message.getOwner_photo_url()).resize(ImageUtils.SIZE_M, ImageUtils.SIZE_M).into(bind.photo);
         }
     }
 

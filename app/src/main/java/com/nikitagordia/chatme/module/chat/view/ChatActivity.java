@@ -58,7 +58,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new MessageAdapter(bind.messageList, auth.getCurrentUser().getUid());
+        adapter = new MessageAdapter(this, bind.messageList, auth.getCurrentUser().getUid());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
         bind.messageList.setLayoutManager(linearLayoutManager);
@@ -105,6 +105,6 @@ public class ChatActivity extends AppCompatActivity {
     public void createMessage(String content) {
         String key = db.getReference().child("message").push().getKey();
         db.getReference().child("chat").child(chatId).child("message_id").push().setValue(key);
-        db.getReference().child("message").child(key).setValue(new Message(auth.getCurrentUser().getUid(), auth.getCurrentUser().getDisplayName(), content));
+        db.getReference().child("message").child(key).setValue(new Message(auth.getCurrentUser().getUid(), auth.getCurrentUser().getDisplayName(), content, auth.getCurrentUser().getPhotoUrl().toString()));
     }
 }

@@ -15,18 +15,29 @@ public class Message {
 
     private String owner_nickname;
 
+    private String owner_photo_url;
+
     private String date;
 
     public Message() {
 
     }
 
-    public Message(String owner_id, String owner_nickname, String content) {
+    public Message(String owner_id, String owner_nickname, String content, String owner_photo_url) {
         this.owner_nickname = owner_nickname;
         this.content = content;
         this.owner_id = owner_id;
+        this.owner_photo_url = owner_photo_url;
 
         date = new SimpleDateFormat("kk:mm").format(new Date()).toString();
+    }
+
+    public String getOwner_photo_url() {
+        return owner_photo_url;
+    }
+
+    public void setOwner_photo_url(String owner_photo_url) {
+        this.owner_photo_url = owner_photo_url;
     }
 
     public String getContent() {

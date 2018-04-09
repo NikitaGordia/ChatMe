@@ -29,7 +29,9 @@ import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.FragmentProfileBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.main.users.model.User;
+import com.nikitagordia.chatme.module.profilesetup.view.ProfileSetupActivity;
 import com.nikitagordia.chatme.module.signin.view.SigninActivity;
+import com.nikitagordia.chatme.utils.ImageUtils;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -182,7 +184,7 @@ public class ProfileFragment extends Fragment {
                 user.setUid(auth.getCurrentUser().getUid());
                 bind.userEmail.setText(user.getEmail());
                 bind.userName.setText(user.getName());
-                if (user.getPhoto_url() != null) Picasso.with(getActivity()).load(user.getPhoto_url()).into(bind.photo);
+                if (user.getPhoto_url() != null) Picasso.with(getActivity()).load(user.getPhoto_url()).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
                 dialog.cancel();
                 runningDialog = false;
                 Toast.makeText(getContext(), getResources().getString(R.string.welcome), Toast.LENGTH_SHORT).show();
@@ -205,6 +207,14 @@ public class ProfileFragment extends Fragment {
                 auth.signOut();
                 startActivity(new Intent(getContext(), SigninActivity.class));
                 getActivity().finish();
+            }
+        });
+
+        bind.photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+                startActivity(new Intent(getContext(), ProfileSetupActivity.class));
             }
         });
 

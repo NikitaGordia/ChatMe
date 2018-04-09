@@ -18,6 +18,7 @@
             <ImageView
                 android:id="@+id/photo"
                 android:layout_weight="0"
+                android:scaleType="fitCenter"
                 android:src="@drawable/user_photo_holder"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"

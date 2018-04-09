@@ -342,6 +342,7 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     private void phoneSignin(String number) {
+        if (number.isEmpty()) return;
         dialog.show();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, this,
                 new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {

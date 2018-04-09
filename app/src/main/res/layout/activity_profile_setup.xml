@@ -83,6 +83,7 @@
 
 
             <ImageView
+                android:scaleType="fitCenter"
                 android:layout_margin="20dp"
                 android:src="@drawable/user_photo_holder"
                 android:id="@+id/photo"

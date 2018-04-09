@@ -29,6 +29,7 @@ import com.nikitagordia.chatme.databinding.ActivityProfileSetupBinding;
 import com.nikitagordia.chatme.module.main.MainActivity;
 import com.nikitagordia.chatme.module.signin.view.PhotoPickDialog;
 import com.nikitagordia.chatme.utils.ImageUtils;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -78,9 +79,14 @@ public class ProfileSetupActivity extends AppCompatActivity {
                 bind.methodImg.setImageResource(R.drawable.logo_phone);
                 bind.methodTv.setText(R.string.phone_sms);
                 break;
-            default: PROFILE_SETUP_WITH_EMAIL_AND_PASSWORD :
+            case PROFILE_SETUP_WITH_EMAIL_AND_PASSWORD :
                 bind.methodImg.setImageResource(R.drawable.logo_login);
                 bind.methodTv.setText(R.string.email_and_password);
+                break;
+            default:
+                bind.methodImg.setImageResource(R.drawable.icon_profile_setup);
+                bind.methodTv.setText(R.string.profile_setup);
+                break;
         }
 
         auth = FirebaseAuth.getInstance();
@@ -92,6 +98,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
             if (user.getEmail() != null) bind.info.setText(user.getEmail()); else
                 if (user.getPhoneNumber() != null) bind.info.setText(user.getPhoneNumber());
             if (user.getDisplayName() != null) bind.nickname.setText(user.getDisplayName());
+            if (user.getPhotoUrl() != null) Picasso.with(this).load(user.getPhotoUrl()).into(bind.photo);
         } else finish();
 
         progressDialog = new ProgressDialog(this);

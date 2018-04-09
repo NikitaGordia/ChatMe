@@ -31,6 +31,7 @@ import com.nikitagordia.chatme.module.main.profile.view.ListAdapter;
 import com.nikitagordia.chatme.module.main.profile.view.ProfileFragment;
 import com.nikitagordia.chatme.module.main.users.model.User;
 import com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity;
+import com.nikitagordia.chatme.utils.ImageUtils;
 import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -172,7 +173,7 @@ public class ProfileActivity extends AppCompatActivity {
                 user.setUid(uid);
                 bind.userEmail.setText(user.getEmail());
                 bind.userName.setText(user.getName());
-                if (user.getPhoto_url() != null) Picasso.with(ProfileActivity.this).load(user.getPhoto_url()).into(bind.photo);
+                if (user.getPhoto_url() != null) Picasso.with(ProfileActivity.this).load(user.getPhoto_url()).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
                 setupStatus();
                 dialog.cancel();
                 loadPosts();
@@ -282,6 +283,7 @@ public class ProfileActivity extends AppCompatActivity {
                             db.getReference().child("user").child(user.getUid()).child("chat_id").child(auth.getCurrentUser().getUid()).setValue(key);
                             db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("chat_id").child(user.getUid()).setValue(key);
                             db.getReference().child("chat").child(key).child("user_id").push().setValue(user.getUid());
+                            db.getReference().child("chat").child(key).child("photo_url").setValue(user.getPhoto_url());
                             db.getReference().child("chat").child(key).child("user_id").push().setValue(auth.getCurrentUser().getUid());
                             startActivity(ChatActivity.getIntent(key, ProfileActivity.this));
                         } else {

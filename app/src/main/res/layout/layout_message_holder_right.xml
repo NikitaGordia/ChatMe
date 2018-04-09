@@ -10,6 +10,7 @@
         android:paddingTop="8dp">
 
         <ImageView
+            android:scaleType="fitCenter"
             android:id="@+id/photo"
             android:layout_width="32dp"
             android:layout_height="32dp"
