@@ -29,6 +29,7 @@ import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.FragmentProfileBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.main.users.model.User;
+import com.nikitagordia.chatme.module.profilesetup.view.ProfileSetupActivity;
 import com.nikitagordia.chatme.module.signin.view.SigninActivity;
 import com.nikitagordia.chatme.utils.ImageUtils;
 import com.squareup.picasso.Picasso;
@@ -206,6 +207,14 @@ public class ProfileFragment extends Fragment {
                 auth.signOut();
                 startActivity(new Intent(getContext(), SigninActivity.class));
                 getActivity().finish();
+            }
+        });
+
+        bind.photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+                startActivity(new Intent(getContext(), ProfileSetupActivity.class));
             }
         });
 
