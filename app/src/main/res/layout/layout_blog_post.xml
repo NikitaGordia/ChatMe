@@ -33,6 +33,7 @@
 
             <ImageView
                 android:id="@+id/photo"
+                android:scaleType="fitCenter"
                 android:src="@drawable/user_photo_holder"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"

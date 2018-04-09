@@ -47,34 +47,45 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 final Chat chat = new Chat((String)dataSnapshot.getValue());
-                db.getReference().child("chat").child(chat.getChat_id()).child("message_id").limitToLast(1).addValueEventListener(new ValueEventListener() {
+                db.getReference().child("chat").child(chat.getChat_id()).child("photo_url").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                            db.getReference().child("message").child((String)snap.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    chat.setLast_message((String)dataSnapshot.child("content").getValue());
-                                    chat.setTime((String)dataSnapshot.child("date").getValue());
-                                    db.getReference().child("chat").child(chat.getChat_id()).child("user_id").addListenerForSingleValueEvent(new ValueEventListener() {
+                        chat.setPhoto_url((String)dataSnapshot.getValue());
+                        db.getReference().child("chat").child(chat.getChat_id()).child("message_id").limitToLast(1).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                    db.getReference().child("message").child((String)snap.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot snap : dataSnapshot.getChildren())
-                                                if (!auth.getCurrentUser().getUid().equals((String)snap.getValue())) {
-                                                    db.getReference().child("user").child((String)snap.getValue()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                                            chat.setChat_name((String)dataSnapshot.getValue());
-                                                            adapter.update(chat);
-                                                        }
+                                            chat.setLast_message((String)dataSnapshot.child("content").getValue());
+                                            chat.setTime((String)dataSnapshot.child("date").getValue());
+                                            db.getReference().child("chat").child(chat.getChat_id()).child("user_id").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot snap : dataSnapshot.getChildren())
+                                                        if (!auth.getCurrentUser().getUid().equals((String)snap.getValue())) {
+                                                            db.getReference().child("user").child((String)snap.getValue()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                    chat.setChat_name((String)dataSnapshot.getValue());
+                                                                    adapter.update(chat);
+                                                                }
 
-                                                        @Override
-                                                        public void onCancelled(DatabaseError databaseError) {
+                                                                @Override
+                                                                public void onCancelled(DatabaseError databaseError) {
 
+                                                                }
+                                                            });
+                                                            break;
                                                         }
-                                                    });
-                                                    break;
                                                 }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
                                         }
 
                                         @Override
@@ -82,15 +93,15 @@ public class ChatsFragment extends Fragment {
 
                                         }
                                     });
+                                    break;
                                 }
+                            }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                                }
-                            });
-                            break;
-                        }
+                            }
+                        });
                     }
 
                     @Override

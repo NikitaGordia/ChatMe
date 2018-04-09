@@ -14,6 +14,11 @@ import android.graphics.RectF;
 
 public class ImageUtils {
 
+    public static final int SIZE_XXL = 350;
+    public static final int SIZE_XL = 300;
+    public static final int SIZE_L = 200;
+    public static final int SIZE_M = 100;
+
     public static Bitmap getCircularBitmap(Bitmap srcBitmap) {
         int squareBitmapWidth = Math.min(srcBitmap.getWidth(), srcBitmap.getHeight());
 

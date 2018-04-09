@@ -12,7 +12,17 @@ public class Chat {
 
     private String last_message;
 
+    private String photo_url;
+
     private String time;
+
+    public String getPhoto_url() {
+        return photo_url;
+    }
+
+    public void setPhoto_url(String photo_url) {
+        this.photo_url = photo_url;
+    }
 
     public String getTime() {
         return time;

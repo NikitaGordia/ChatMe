@@ -10,6 +10,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:scaleType="fitCenter"
             android:layout_margin="2dp"
             android:id="@+id/photo"
             android:layout_weight="0"
