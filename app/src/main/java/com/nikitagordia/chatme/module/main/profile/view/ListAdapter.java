@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.nikitagordia.chatme.module.postdetail.view.PostDetailActivity;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
 import com.nikitagordia.chatme.utils.ImageUtils;
-import com.nikitagordia.chatme.utils.UtilsManager;
+import com.nikitagordia.chatme.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -131,7 +130,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.PostHolder> {
         public void bindData(BlogPost post) {
             this.post = post;
             bind.nickname.setText(post.getOwner_name());
-            bind.content.setText(UtilsManager.cut(post.getContent(), 500));
+            bind.content.setText(StringUtils.cut(post.getContent(), 500));
             bind.date.setText(post.getDate());
             bind.like.setText(context.getResources().getString(R.string.like_cnt, post.getLike()));
             bind.comment.setText(context.getResources().getString(R.string.comment_cnt, post.getComment()));

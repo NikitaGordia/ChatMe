@@ -4,7 +4,7 @@ package com.nikitagordia.chatme.utils;
  * Created by nikitagordia on 3/30/18.
  */
 
-public class UtilsManager {
+public class StringUtils {
 
     public static String cut(String str, int len) {
         if (str.length() > len - 3) {
