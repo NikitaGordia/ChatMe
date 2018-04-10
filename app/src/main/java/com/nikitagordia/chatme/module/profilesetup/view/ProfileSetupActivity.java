@@ -62,6 +62,8 @@ public class ProfileSetupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         bind = DataBindingUtil.setContentView(this, R.layout.activity_profile_setup);
 
+        boolean edit = false;
+
         switch (getIntent().getIntExtra(EXTRA_SETUP_METHOD, -1)) {
             case PROFILE_SETUP_WITH_GOOGLE :
                 bind.methodImg.setImageResource(R.drawable.logo_google);
@@ -84,6 +86,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
                 bind.methodTv.setText(R.string.email_and_password);
                 break;
             default:
+                edit = true;
                 bind.methodImg.setImageResource(R.drawable.icon_profile_setup);
                 bind.methodTv.setText(R.string.profile_setup);
                 break;
@@ -98,10 +101,20 @@ public class ProfileSetupActivity extends AppCompatActivity {
             if (user.getEmail() != null) bind.info.setText(user.getEmail()); else
                 if (user.getPhoneNumber() != null) bind.info.setText(user.getPhoneNumber());
             if (user.getDisplayName() != null) bind.nickname.setText(user.getDisplayName());
-            if (user.getPhotoUrl() != null) Picasso.with(this).load(user.getPhotoUrl()).into(bind.photo);
+            if (user.getPhotoUrl() != null) {
+                if (edit) {
+                    Picasso.with(this).load(user.getPhotoUrl()).into(bind.photo);
+                } else {
+                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                            .setPhotoUri(null)
+                            .build();
+                    user.updateProfile(profileChangeRequest);
+                }
+            }
         } else finish();
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.loading));
 
         bind.done.setOnClickListener(new View.OnClickListener() {
             @Override

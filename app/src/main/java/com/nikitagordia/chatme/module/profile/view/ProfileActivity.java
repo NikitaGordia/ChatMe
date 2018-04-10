@@ -283,7 +283,6 @@ public class ProfileActivity extends AppCompatActivity {
                             db.getReference().child("user").child(user.getUid()).child("chat_id").child(auth.getCurrentUser().getUid()).setValue(key);
                             db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("chat_id").child(user.getUid()).setValue(key);
                             db.getReference().child("chat").child(key).child("user_id").push().setValue(user.getUid());
-                            db.getReference().child("chat").child(key).child("photo_url").setValue(user.getPhoto_url());
                             db.getReference().child("chat").child(key).child("user_id").push().setValue(auth.getCurrentUser().getUid());
                             startActivity(ChatActivity.getIntent(key, ProfileActivity.this));
                         } else {
