@@ -3,10 +3,10 @@ package com.nikitagordia.chatme.module.chat.view;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,16 +18,33 @@ import com.google.firebase.database.ValueEventListener;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityChatBinding;
 import com.nikitagordia.chatme.module.chat.model.Message;
+import com.nikitagordia.chatme.utils.Const;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ChatActivity extends AppCompatActivity {
 
     private static final String EXTRA_CHAT_ID = "com.nikitagordia.chatme.module.chat.view.ChatActivity.chat_id";
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private ActivityChatBinding bind;
     private MessageAdapter adapter;
 
     private FirebaseDatabase db;
     private FirebaseAuth auth;
+
+    private OkHttpClient client;
 
     private String chatId;
 
@@ -49,6 +66,8 @@ public class ChatActivity extends AppCompatActivity {
 
         db = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+
+        client = new OkHttpClient();
 
         bind.send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +124,35 @@ public class ChatActivity extends AppCompatActivity {
     public void createMessage(String content) {
         String key = db.getReference().child("message").push().getKey();
         db.getReference().child("chat").child(chatId).child("message_id").push().setValue(key);
-        db.getReference().child("message").child(key).setValue(new Message(auth.getCurrentUser().getUid(), auth.getCurrentUser().getDisplayName(), content, auth.getCurrentUser().getPhotoUrl().toString()));
+        Message message = new Message(auth.getCurrentUser().getUid(), auth.getCurrentUser().getDisplayName(), content, auth.getCurrentUser().getPhotoUrl().toString());
+        db.getReference().child("message").child(key).setValue(message);
+
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("to", "cH-vsPJxgCo:APA91bHxIezZXwh6lXieE108dPBTUNsrlHqswneYGyiLdHj2kBBc3FfVTcKtrPwtrJ1VbZpQ4QvlBy-zP3xQROwQVRNy1Sx6riDxPpNUSjYrNBGQdHEbGuQgj3oIpgtROe3H8qPOLXMg");
+            JSONObject data = new JSONObject();
+            data.put("message", "Something &&");
+            obj.put("data", data);
+
+            client.newCall(new Request.Builder()
+                    .url(Const.NOTIFICATION_URL)
+                    .addHeader("Content-Type", Const.CONTENT_TYPE)
+                    .addHeader("Authorization", Const.AUTH_KEY)
+                    .post(RequestBody.create(JSON, obj.toString()))
+                    .build()
+            ).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.d("mytg", "Error Request");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Log.d("mytg", "Responce " + response.toString());
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
