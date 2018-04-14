@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.FragmentProfileBinding;
 import com.nikitagordia.chatme.module.main.profile.model.BlogPost;
@@ -42,6 +43,7 @@ public class ProfileFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
+    private FirebaseMessaging messaging;
 
     private FragmentProfileBinding bind;
 
@@ -61,6 +63,7 @@ public class ProfileFragment extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
+        messaging = FirebaseMessaging.getInstance();
 
         adapter = new ListAdapter(getContext(), getActivity(), bind.postList, new OnLikeCallback() {
             @Override
@@ -204,6 +207,18 @@ public class ProfileFragment extends Fragment {
         bind.logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("chat_id").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snap : dataSnapshot.getChildren())
+                            messaging.unsubscribeFromTopic((String)snap.getValue());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 auth.signOut();
                 startActivity(new Intent(getContext(), SigninActivity.class));
                 getActivity().finish();
