@@ -37,6 +37,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private static final String EXTRA_CHAT_ID = "com.nikitagordia.chatme.module.chat.view.ChatActivity.chat_id";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final String TAG = "ChatActivity";
 
     private ActivityChatBinding bind;
     private MessageAdapter adapter;
@@ -72,6 +73,7 @@ public class ChatActivity extends AppCompatActivity {
         bind.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (bind.content.getText().toString().isEmpty()) return;
                 createMessage(bind.content.getText().toString());
                 bind.content.setText("");
             }
@@ -136,6 +138,7 @@ public class ChatActivity extends AppCompatActivity {
             data.put("owner_photo_url", auth.getCurrentUser().getPhotoUrl().toString());
             data.put("content", content);
             data.put("date", message.getDate());
+            data.put("owner_id", auth.getCurrentUser().getUid());
             obj.put("data", data);
 
             client.newCall(new Request.Builder()
@@ -147,12 +150,12 @@ public class ChatActivity extends AppCompatActivity {
             ).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("mytg", "Error Request");
+                    Log.d(TAG, "Error Request " + e.getMessage());
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Log.d("mytg", "Responce " + response.toString());
+                    Log.d(TAG, "Responce " + response.toString());
                 }
             });
         } catch (JSONException e) {
