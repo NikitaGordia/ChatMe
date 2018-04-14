@@ -34,16 +34,6 @@ public class Message {
         date = new SimpleDateFormat("kk:mm").format(new Date()).toString();
     }
 
-    public Map<String, String> createPostmanNotification(String chatId) {
-        Map<String, String> map = new HashMap<>();
-        map.put("chat_id", chatId);
-        map.put("date", date);
-        map.put("content", content);
-        map.put("owner_nickname", owner_nickname);
-        map.put("owner_photo_url", owner_photo_url);
-        return map;
-    }
-
     public String getOwner_photo_url() {
         return owner_photo_url;
     }

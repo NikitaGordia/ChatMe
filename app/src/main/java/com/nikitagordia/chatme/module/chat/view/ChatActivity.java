@@ -128,10 +128,14 @@ public class ChatActivity extends AppCompatActivity {
         db.getReference().child("message").child(key).setValue(message);
 
         try {
+
             JSONObject obj = new JSONObject();
-            obj.put("to", "cH-vsPJxgCo:APA91bHxIezZXwh6lXieE108dPBTUNsrlHqswneYGyiLdHj2kBBc3FfVTcKtrPwtrJ1VbZpQ4QvlBy-zP3xQROwQVRNy1Sx6riDxPpNUSjYrNBGQdHEbGuQgj3oIpgtROe3H8qPOLXMg");
+            obj.put("to", "/topics/" + chatId);
             JSONObject data = new JSONObject();
-            data.put("message", "Something &&");
+            data.put("owner_nickname", auth.getCurrentUser().getDisplayName());
+            data.put("owner_photo_url", auth.getCurrentUser().getPhotoUrl().toString());
+            data.put("content", content);
+            data.put("date", message.getDate());
             obj.put("data", data);
 
             client.newCall(new Request.Builder()
