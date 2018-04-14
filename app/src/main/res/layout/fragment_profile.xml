@@ -82,7 +82,8 @@
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/add_post"
-                android:layout_margin="5dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="12dp"
                 android:src="@drawable/icon_add"
                 android:layout_gravity="bottom|right"
                 android:layout_width="wrap_content"
