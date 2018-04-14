@@ -35,6 +35,7 @@ public class MessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        Log.d("mytg", "HERE");
         if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(remoteMessage.getData().get("owner_id"))) return;
 
         try {

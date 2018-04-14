@@ -15,10 +15,10 @@
             android:id="@+id/tab_layout"
             android:layout_weight="0"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDarkBlue"
-            app:tabSelectedTextColor="@android:color/white"
-            app:tabTextColor="@android:color/darker_gray"
+            android:layout_height="40dp"
+            android:background="@android:color/white"
+            app:tabSelectedTextColor="@color/colorAccentDark"
+            app:tabTextColor="@color/colorPrimaryDarkBlue"
             app:tabMode="fixed"
             app:tabGravity="fill"/>
 

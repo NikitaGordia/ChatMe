@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityProfileBinding;
 import com.nikitagordia.chatme.module.chat.view.ChatActivity;
@@ -42,6 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private FirebaseDatabase db;
     private FirebaseAuth auth;
+    private FirebaseMessaging messaging;
 
     private ActivityProfileBinding bind;
     private ListAdapter adapter;
@@ -60,6 +62,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         db = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+        messaging = FirebaseMessaging.getInstance();
 
         status = -1;
 
@@ -280,10 +283,12 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() == null) {
                             String key = db.getReference().child("chat").push().getKey();
+                            messaging.subscribeToTopic(key);
                             db.getReference().child("user").child(user.getUid()).child("chat_id").child(auth.getCurrentUser().getUid()).setValue(key);
                             db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("chat_id").child(user.getUid()).setValue(key);
                             db.getReference().child("chat").child(key).child("user_id").push().setValue(user.getUid());
                             db.getReference().child("chat").child(key).child("user_id").push().setValue(auth.getCurrentUser().getUid());
+
                             startActivity(ChatActivity.getIntent(key, ProfileActivity.this));
                         } else {
                             startActivity(ChatActivity.getIntent((String)dataSnapshot.getValue(), ProfileActivity.this));
