@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.LayoutLikeHolderBinding;
 import com.nikitagordia.chatme.module.main.users.model.User;
 import com.nikitagordia.chatme.utils.ImageUtils;
@@ -62,7 +63,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeHolder> {
         public void bind(User user) {
             bind.nickname.setText(user.getName());
 
-            if (user.getPhoto_url() != null) Picasso.with(context).load(user.getPhoto_url()).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
+            if (user.getPhoto_url() != null) Picasso.with(context).load(user.getPhoto_url()).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
         }
     }
 }

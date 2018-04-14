@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.LayoutMessageHolderRightBinding;
 import com.nikitagordia.chatme.module.chat.model.Message;
 import com.nikitagordia.chatme.databinding.LayoutMessageHolderLeftBinding;
@@ -81,7 +82,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
             bind.date.setText(message.getDate());
             bind.nickname.setText(message.getOwner_nickname());
 
-            if (message.getOwner_photo_url() != null) Picasso.with(context).load(message.getOwner_photo_url()).resize(ImageUtils.SIZE_M, ImageUtils.SIZE_M).into(bind.photo);
+            if (message.getOwner_photo_url() != null) Picasso.with(context).load(message.getOwner_photo_url()).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_M, ImageUtils.SIZE_M).into(bind.photo);
         }
     }
 
@@ -100,7 +101,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
             bind.date.setText(message.getDate());
             bind.nickname.setText(message.getOwner_nickname());
 
-            if (message.getOwner_photo_url() != null) Picasso.with(context).load(message.getOwner_photo_url()).resize(ImageUtils.SIZE_M, ImageUtils.SIZE_M).into(bind.photo);
+            if (message.getOwner_photo_url() != null) Picasso.with(context).load(message.getOwner_photo_url()).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_M, ImageUtils.SIZE_M).into(bind.photo);
         }
     }
 

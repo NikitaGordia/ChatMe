@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.nikitagordia.chatme.databinding.FragmentChatBinding;
 import com.nikitagordia.chatme.module.main.chats.model.Chat;
 import com.nikitagordia.chatme.module.main.users.model.User;
@@ -31,6 +32,7 @@ public class ChatsFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
+    private FirebaseMessaging messaging;
 
     @Nullable
     @Override
@@ -43,6 +45,7 @@ public class ChatsFragment extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
+        messaging = FirebaseMessaging.getInstance();
 
         db.getReference().child("user").child(auth.getCurrentUser().getUid()).child("chat_id").addChildEventListener(new ChildEventListener() {
             @Override
@@ -69,6 +72,7 @@ public class ChatsFragment extends Fragment {
                                                             chat.setChat_name(u.getName());
                                                             chat.setPhoto_url(u.getPhoto_url());
                                                             adapter.update(chat);
+                                                            messaging.subscribeToTopic(chat.getChat_id());
                                                         }
 
                                                         @Override

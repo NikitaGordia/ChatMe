@@ -14,19 +14,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".helper.firebasenotify.MessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".helper.firebasenotify.InstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".helper.BootBR">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".helper.MainService"
             android:stopWithTask="false" />
 
-        <activity
-            android:name=".module.signin.view.SigninActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".module.profilesetup.view.ProfileSetupActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".module.main.MainActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".module.splash.SplashActivity"
             android:screenOrientation="portrait">
@@ -37,13 +49,26 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".module.signin.view.SigninActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".module.chat.view.ChatActivity"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".module.profilesetup.view.ProfileSetupActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".module.main.MainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".module.chat.view.ChatActivity"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".module.postdetail.view.PostDetailActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".module.profile.view.ProfileActivity"
             android:screenOrientation="portrait" />

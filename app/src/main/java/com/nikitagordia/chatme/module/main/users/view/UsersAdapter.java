@@ -104,7 +104,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserHolder>{
             this.user = user;
             bind.userName.setText(user.getName());
             bind.userEmail.setText(user.getEmail());
-            if (user.getPhoto_url() != null) Picasso.with(context).load(user.getPhoto_url()).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
+            if (user.getPhoto_url() != null) Picasso.with(context).load(user.getPhoto_url()).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
         }
     }
 }
