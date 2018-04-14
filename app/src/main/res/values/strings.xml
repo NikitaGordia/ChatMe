@@ -63,4 +63,14 @@
     <string name="chats">Chats</string>
     <string name="profile_setup">Profile setup</string>
 
+    <string name="wrong">Something went wrong(</string>
+    <string name="google_trouble">Google troubles(</string>
+    <string name="twitter_trouble">Twitter troubles(</string>
+    <string name="facebook_trouble">Facebook troubles(</string>
+    <string name="server_trouble">Server troubles(</string>
+
+    <string name="google_loading">Waiting for google response...</string>
+    <string name="server_loading">Waiting for server response...</string>
+    <string name="phone_loading">Waiting for sms with code...</string>
+
 </resources>

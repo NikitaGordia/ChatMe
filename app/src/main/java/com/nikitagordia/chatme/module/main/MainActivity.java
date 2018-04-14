@@ -18,6 +18,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.ActivityMainBinding;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding bind;
     private int[] backgroundColors, textColors;
     private int state;
+    private int currColorBack, currColorText;
 
     private AnimatorSet animatorSet;
 
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getColor(R.color.colorPrimaryDarkBlue),
                 getResources().getColor(R.color.white)
         };
+        currColorBack = backgroundColors[0];
+        currColorText = textColors[0];
 
         bind.viewPager.setAdapter(adapter);
         bind.viewPager.setOffscreenPageLimit(3);
@@ -76,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                updateTabs(state, position);
                 state = position;
+                updateTabs();
             }
 
             @Override
@@ -103,31 +108,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateTabs(int oldState, int newState) {
-        if (oldState == newState) return;
-
+    private void updateTabs() {
         if (animatorSet != null) animatorSet.pause();
-        ValueAnimator animatorBack = ValueAnimator.ofArgb(backgroundColors[oldState], backgroundColors[newState]);
+        ValueAnimator animatorBack = ValueAnimator.ofArgb(currColorBack, backgroundColors[state]);
         animatorBack.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 bind.tabLayout.setBackgroundColor((int)animation.getAnimatedValue());
+                currColorBack = (int)animation.getAnimatedValue();
             }
         });
 
         final int selected = getResources().getColor(R.color.colorAccentDark);
-        ValueAnimator animatorText = ValueAnimator.ofArgb(textColors[oldState], textColors[newState]);
+        ValueAnimator animatorText = ValueAnimator.ofArgb(currColorText, textColors[state]);
         animatorText.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 bind.tabLayout.setTabTextColors((int)animation.getAnimatedValue(), selected);
+                currColorText = (int)animation.getAnimatedValue();
             }
         });
 
         animatorSet = new AnimatorSet();
         animatorSet
                 .play(animatorBack)
-                .with(animatorText);
+                .after(animatorText);
         animatorSet.start();
     }
 }

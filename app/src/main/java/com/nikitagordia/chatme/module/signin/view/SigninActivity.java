@@ -137,7 +137,7 @@ public class SigninActivity extends AppCompatActivity {
 
                 } else {
                     dialog.cancel();
-                    showToast(R.string.error);
+                    showToast(R.string.wrong);
                     bind.password.setText("");
                 }
             }
@@ -165,11 +165,12 @@ public class SigninActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        dialog.setTitle(R.string.google_loading);
         dialog.show();
         if (requestCode == GOOGLE_REQUEST_CODE) {
             GoogleSignInAccount account = Auth.GoogleSignInApi.getSignInResultFromIntent(data).getSignInAccount();
             if (account == null) {
-                showToast(R.string.error);
+                showToast(R.string.google_trouble);
                 dialog.cancel();
                 return;
             }
@@ -203,7 +204,7 @@ public class SigninActivity extends AppCompatActivity {
 
                     @Override
                     public void failure(TwitterException exception) {
-                        showToast(R.string.error);
+                        showToast(R.string.twitter_trouble);
                         dialog.cancel();
                     }
                 });
@@ -228,7 +229,7 @@ public class SigninActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-                showToast(R.string.error);
+                showToast(R.string.facebook_trouble);
                 dialog.cancel();
             }
         });
@@ -251,6 +252,7 @@ public class SigninActivity extends AppCompatActivity {
                     showToast(R.string.empty_field);
                     return;
                 }
+                dialog.setTitle(R.string.server_loading);
                 dialog.show();
                 auth.createUserWithEmailAndPassword(bind.email.getText().toString(), bind.password.getText().toString()).addOnCompleteListener(signInCallback);
             }
@@ -276,6 +278,7 @@ public class SigninActivity extends AppCompatActivity {
                 done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        dialog.setTitle(R.string.server_loading);
                         dialog.show();
                         d.cancel();
                         emailPasswordSignin(emailHolder.getText().toString(), passwordHolder.getText().toString());
@@ -322,7 +325,7 @@ public class SigninActivity extends AppCompatActivity {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                         dialog.cancel();
-                        showToast(R.string.error);
+                        showToast(R.string.google_trouble);
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -334,6 +337,7 @@ public class SigninActivity extends AppCompatActivity {
                 lastOpenImg = bind.googleImg;
                 lastOpenTv = bind.googleTv;
                 lastOpenId = ProfileSetupActivity.PROFILE_SETUP_WITH_GOOGLE;
+                dialog.setTitle(R.string.google_loading);
                 dialog.show();
                 startActivityForResult(Auth.GoogleSignInApi.getSignInIntent(client), GOOGLE_REQUEST_CODE);
             }
@@ -342,6 +346,7 @@ public class SigninActivity extends AppCompatActivity {
 
     private void phoneSignin(String number) {
         if (number.isEmpty()) return;
+        dialog.setTitle(R.string.phone_loading);
         dialog.show();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, this,
                 new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -352,7 +357,7 @@ public class SigninActivity extends AppCompatActivity {
 
                     @Override
                     public void onVerificationFailed(FirebaseException e) {
-                        showToast(R.string.error);
+                        showToast(R.string.server_trouble);
                     }
                 });
     }
