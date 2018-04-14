@@ -184,7 +184,7 @@ public class ProfileFragment extends Fragment {
                 user.setUid(auth.getCurrentUser().getUid());
                 bind.userEmail.setText(user.getEmail());
                 bind.userName.setText(user.getName());
-                if (user.getPhoto_url() != null) Picasso.with(getActivity()).load(user.getPhoto_url()).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
+                if (user.getPhoto_url() != null) Picasso.with(getActivity()).load(user.getPhoto_url()).placeholder(R.drawable.user_photo_holder).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
                 dialog.cancel();
                 runningDialog = false;
                 Toast.makeText(getContext(), getResources().getString(R.string.welcome), Toast.LENGTH_SHORT).show();

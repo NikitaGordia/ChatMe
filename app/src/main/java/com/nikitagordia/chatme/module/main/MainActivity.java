@@ -60,3 +60,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+
+//1. icon notification
+//2. Loading text resources

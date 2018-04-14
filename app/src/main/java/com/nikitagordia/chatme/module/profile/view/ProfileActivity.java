@@ -173,7 +173,7 @@ public class ProfileActivity extends AppCompatActivity {
                 user.setUid(uid);
                 bind.userEmail.setText(user.getEmail());
                 bind.userName.setText(user.getName());
-                if (user.getPhoto_url() != null) Picasso.with(ProfileActivity.this).load(user.getPhoto_url()).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
+                if (user.getPhoto_url() != null) Picasso.with(ProfileActivity.this).load(user.getPhoto_url()).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_XXL, ImageUtils.SIZE_XXL).into(bind.photo);
                 setupStatus();
                 dialog.cancel();
                 loadPosts();

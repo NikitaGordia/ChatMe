@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.LayoutCommentHolderBinding;
 import com.nikitagordia.chatme.module.postdetail.model.Comment;
 import com.nikitagordia.chatme.module.profile.view.ProfileActivity;
@@ -90,7 +91,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentH
             bind.nickname.setOnClickListener(onClickShowUser);
             bind.photo.setOnClickListener(onClickShowUser);
 
-            if (comment.getOwner_photo_url() != null) Picasso.with(context).load(comment.getOwner_photo_url()).resize(ImageUtils.SIZE_L, ImageUtils.SIZE_L).into(bind.photo);
+            if (comment.getOwner_photo_url() != null) Picasso.with(context).load(comment.getOwner_photo_url()).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_L, ImageUtils.SIZE_L).into(bind.photo);
         }
     }
 }

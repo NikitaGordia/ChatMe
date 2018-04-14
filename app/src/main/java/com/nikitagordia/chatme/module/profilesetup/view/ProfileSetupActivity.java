@@ -114,6 +114,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
         } else finish();
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
         progressDialog.setMessage(getResources().getString(R.string.loading));
 
         bind.done.setOnClickListener(new View.OnClickListener() {

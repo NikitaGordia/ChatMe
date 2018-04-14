@@ -3,6 +3,7 @@ package com.nikitagordia.chatme.helper.firebasenotify;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.nikitagordia.chatme.R;
+import com.nikitagordia.chatme.module.chat.view.ChatActivity;
 import com.nikitagordia.chatme.utils.Const;
 import com.nikitagordia.chatme.utils.ImageUtils;
 import com.squareup.picasso.Picasso;
@@ -28,13 +30,15 @@ import java.util.List;
 
 public class MessagingService extends FirebaseMessagingService {
 
+    private static final String TAG = "MessagingService";
+
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(remoteMessage.getData().get("owner_id"))) return;
 
         try {
-            final Bitmap bitmap = Picasso.with(getApplicationContext()).load(remoteMessage.getData().get("owner_photo_url")).resize(ImageUtils.SIZE_M, ImageUtils.SIZE_M).get();
+            final Bitmap bitmap = Picasso.with(getApplicationContext()).load(remoteMessage.getData().get("owner_photo_url")).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_M, ImageUtils.SIZE_M).get();
             new Handler(getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
@@ -44,20 +48,15 @@ public class MessagingService extends FirebaseMessagingService {
                             .setContentText(remoteMessage.getData().get("content"))
                             .setSmallIcon(R.drawable.icon_message_notification)
                             .setLargeIcon(bitmap)
+                            .setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, ChatActivity.getIntent(remoteMessage.getData().get("chat_id"), getApplicationContext()), 0))
                             .build();
+                    notification.flags |= Notification.FLAG_AUTO_CANCEL;
                     ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
                 }
             });
         } catch (IOException e) {
-            Log.d("mytg", "Error " + e.getMessage());
+            Log.d(TAG, "Error " + e.getMessage());
         }
-    }
-
-    public boolean isForeground(String myPackage) {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
-        ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
-        return componentInfo.getPackageName().equals(myPackage);
     }
 }
 

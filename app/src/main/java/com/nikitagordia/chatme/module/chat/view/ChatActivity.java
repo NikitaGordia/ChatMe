@@ -134,6 +134,7 @@ public class ChatActivity extends AppCompatActivity {
             JSONObject obj = new JSONObject();
             obj.put("to", "/topics/" + chatId);
             JSONObject data = new JSONObject();
+            data.put("chat_id", chatId);
             data.put("owner_nickname", auth.getCurrentUser().getDisplayName());
             data.put("owner_photo_url", auth.getCurrentUser().getPhotoUrl().toString());
             data.put("content", content);

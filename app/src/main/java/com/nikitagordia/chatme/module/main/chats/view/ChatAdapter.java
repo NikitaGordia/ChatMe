@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nikitagordia.chatme.R;
 import com.nikitagordia.chatme.databinding.LayoutChatHolderBinding;
 import com.nikitagordia.chatme.module.chat.view.ChatActivity;
 import com.nikitagordia.chatme.module.main.chats.model.Chat;
@@ -81,7 +82,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder> {
             bind.time.setText(chat.getTime());
 
             if (chat.getPhoto_url() != null) {
-                Picasso.with(context).load(chat.getPhoto_url()).resize(ImageUtils.SIZE_XL, ImageUtils.SIZE_XL).into(bind.photo);
+                Picasso.with(context).load(chat.getPhoto_url()).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_XL, ImageUtils.SIZE_XL).into(bind.photo);
             }
         }
     }

@@ -95,7 +95,7 @@ public class PostDetailActivity extends AppCompatActivity {
             bind.view.setText(getResources().getString(R.string.view_cnt, i.getLongExtra(EXTRA_VIEW, 0)));
 
             String photo = i.getStringExtra(EXTRA_OWNER_PHOTO_URL);
-            if (photo != null) Picasso.with(this).load(photo).resize(ImageUtils.SIZE_XL, ImageUtils.SIZE_XL).into(bind.photo);
+            if (photo != null) Picasso.with(this).load(photo).placeholder(R.drawable.user_photo_holder).resize(ImageUtils.SIZE_XL, ImageUtils.SIZE_XL).into(bind.photo);
 
             db.getReference().child("post").child(postId).child("view_id").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
