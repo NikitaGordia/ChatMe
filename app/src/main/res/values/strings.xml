@@ -1,9 +1,76 @@
 <resources>
     <string name="app_name">ChatMe</string>
 
+
     <!--API-->
     <string name="facebook_app_id">1765601310169433</string>
     <string name="fb_login_protocol_scheme">fb1765601310169433</string>
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">nk02m5V1uLaVA9bNflWeDZpNj</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">3mePLHbik7HYI8Xyi2olITJObthZmyrza0ppS9pSJ3gkkh4Grc</string>
 
+    <!--SigninActivity-->
+    <string name="sign_in">Sign in with</string>
+    <string name="create_account">Create an simple account</string>
+    <string name="email_and_password">Email and password</string>
+    <string name="tap_here">(Tap here)</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="done">DONE</string>
+    <string name="welcome">Welcome</string>
+    <string name="error">Error(</string>
+    <string name="empty_field">Empty field</string>
+    <string name="loading">Loading, please wait...</string>
+    <string name="phone">Phone</string>
+    <string name="twitter">Twitter</string>
+    <string name="facebook">Facebook</string>
+    <string name="google">Google</string>
+    <string name="phone_sms">Phone SMS</string>
+
+    <!--ProfileSetupActivity-->
+    <string name="nickname">Nickname</string>
+    <string name="photo_tv">Tap to choose profile photo</string>
+
+    <!--ProfileFragment-->
+    <string name="home">Home</string>
+    <string name="post_example">And another one bites the dust Oh why can I not conquer love? And I might have thought that we were one Wanted to fight this war without weapon\nWell, I\'ve got thick skin and an elastic heart, But your blade - it mightbe too sharp I'm like a rubber band until you pull too hard, Yeah, I may snap and I move fast But you won't see me fall apart 'Cause I've got an elastic heart</string>
+
+    <string name="like_cnt">%1$d Like</string>
+    <string name="view_cnt">%1$d View</string>
+    <string name="comment_cnt">%1$d Comment</string>
+
+    <!--AddPostDialog-->
+    <string name="post">Post</string>
+
+    <!--PostDetailActivitytail-->
+    <string name="show_likes">Show likes</string>
+    <string name="show_comments">Show comments</string>
+    <string name="type_your_comment">Type comment here ...</string>
+
+    <!--Profile-->
+    <string name="follow">Follow</string>
+    <string name="you">You</string>
+    <string name="friend">Friend</string>
+    <string name="new_friend">New Friend</string>
+    <string name="remove_friend">Removed from friends</string>
+
+    <string name="only_friends">Only friends</string>
+    <string name="select_photo">Select photo</string>
+
+    <string name="message">Message</string>
+    <string name="send">Send</string>
+
+    <string name="users">Users</string>
+    <string name="chats">Chats</string>
+    <string name="profile_setup">Profile setup</string>
+
+    <string name="wrong">Something went wrong(</string>
+    <string name="google_trouble">Google troubles(</string>
+    <string name="twitter_trouble">Twitter troubles(</string>
+    <string name="facebook_trouble">Facebook troubles(</string>
+    <string name="server_trouble">Server troubles(</string>
+
+    <string name="google_loading">Waiting for google response...</string>
+    <string name="server_loading">Waiting for server response...</string>
+    <string name="phone_loading">Waiting for sms with code...</string>
 
 </resources>

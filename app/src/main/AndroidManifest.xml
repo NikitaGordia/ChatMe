@@ -2,46 +2,99 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.nikitagordia.chatme">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
         android:name=".helper.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo_chatme"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/logo_chatme_rounded"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".helper.firebasenotify.MessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".helper.firebasenotify.InstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".helper.BootBR">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".helper.MainService"
             android:stopWithTask="false" />
 
-        <activity android:name=".module.signin.view.SignInActivity">
+        <activity
+            android:name=".module.splash.SplashActivity"
+            android:theme="@style/Splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!--Facebook API-->
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+        <activity
+            android:name=".module.signin.view.SigninActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        <activity
+            android:name=".module.profilesetup.view.ProfileSetupActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".module.main.MainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".module.chat.view.ChatActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".module.postdetail.view.PostDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".module.profile.view.ProfileActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- Facebook API -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

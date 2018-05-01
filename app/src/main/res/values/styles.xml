@@ -6,6 +6,17 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="Splash" parent="AppTheme">
+
+        <item name="android:windowBackground">@drawable/splash_background</item>
+
+        <item name="colorPrimary">@color/colorPrimaryDarkBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkBlue</item>
+
     </style>
 
 </resources>
